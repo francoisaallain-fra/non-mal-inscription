@@ -1,0 +1,87 @@
+code_departement,voix_nupes_wikipedia_t1,voix_nupes_csv_actuel,ecart,pourcentage_nupes_wikipedia_t1,source,methode
+01,46671,46671,0,22.52,Wikipédia - Élections législatives de 2022 dans l'Ain,total_coalition_wikipedia
+02,40464,40464,0,24.08,Wikipédia - Élections législatives de 2022 dans l'Aisne,total_coalition_wikipedia
+03,30034,30034,0,24.23,Wikipédia - Élections législatives de 2022 dans l'Allier,total_coalition_wikipedia
+04,18684,18684,0,28.67,Wikipédia - Élections législatives de 2022 dans les Alpes-de-Haute-Provence,total_coalition_wikipedia
+05,16927,16927,0,28.73,Wikipédia - Élections législatives de 2022 dans les Hautes-Alpes,total_coalition_wikipedia
+06,58127,58127,0,16.72,Wikipédia - Élections législatives de 2022 dans les Alpes-Maritimes,total_coalition_wikipedia
+07,38881,38881,0,28.93,Wikipédia - Élections législatives de 2022 dans l'Ardèche,total_coalition_wikipedia
+08,14752,14752,0,17.52,Wikipédia - Élections législatives de 2022 dans les Ardennes,total_coalition_wikipedia
+09,19771,19771,0,31.05,Wikipédia - Élections législatives de 2022 dans l'Ariège,total_coalition_wikipedia
+10,17153,17153,0,17.46,Wikipédia - Élections législatives de 2022 dans l'Aube,total_coalition_wikipedia
+11,35371,35371,0,25.09,Wikipédia - Élections législatives de 2022 dans l'Aude,total_coalition_wikipedia
+12,29951,29951,0,25.37,Wikipédia - Élections législatives de 2022 dans l'Aveyron,total_coalition_wikipedia
+13,161290,161290,0,26.24,Wikipédia - Élections législatives de 2022 dans les Bouches-du-Rhône,total_coalition_wikipedia
+16,28247,28247,0,22.39,Wikipédia - Élections législatives de 2022 en Charente,total_coalition_wikipedia
+17,57489,57489,0,22.41,Wikipédia - Élections législatives de 2022 en Charente-Maritime,total_coalition_wikipedia
+18,27571,27571,0,25.72,Wikipédia - Élections législatives de 2022 dans le Cher,total_coalition_wikipedia
+21,43029,43029,0,23.31,Wikipédia - Élections législatives de 2022 dans la Côte-d'Or,total_coalition_wikipedia
+22,66434,66434,0,25.92,Wikipédia - Élections législatives de 2022 dans les Côtes-d'Armor,total_coalition_wikipedia
+23,12545,12545,0,26.37,Wikipédia - Élections législatives de 2022 dans la Creuse,total_coalition_wikipedia
+24,40783,40783,0,23.89,Wikipédia - Élections législatives de 2022 en Dordogne,total_coalition_wikipedia
+25,43643,43643,0,24.37,Wikipédia - Élections législatives de 2022 dans le Doubs,total_coalition_wikipedia
+26,57637,57637,0,30.17,Wikipédia - Élections législatives de 2022 dans la Drôme,total_coalition_wikipedia
+29,113236,113236,0,30.72,Wikipédia - Élections législatives de 2022 dans le Finistère,total_coalition_wikipedia
+30,65610,65610,0,25.52,Wikipédia - Élections législatives de 2022 dans le Gard,total_coalition_wikipedia
+31,166344,166344,0,33.85,Wikipédia - Élections législatives de 2022 dans la Haute-Garonne,total_coalition_wikipedia
+32,17343,17343,0,21.46,Wikipédia - Élections législatives de 2022 dans le Gers,total_coalition_wikipedia
+33,173442,173442,0,29.99,Wikipédia - Élections législatives de 2022 en Gironde,total_coalition_wikipedia
+35,132936,132936,0,33.13,Wikipédia - Élections législatives de 2022 en Ille-et-Vilaine,total_coalition_wikipedia
+36,18128,18128,0,22.25,Wikipédia - Élections législatives de 2022 dans l'Indre,total_coalition_wikipedia
+37,59858,59858,0,27.14,Wikipédia - Élections législatives de 2022 en Indre-et-Loire,total_coalition_wikipedia
+38,132151,132151,0,30.54,Wikipédia - Élections législatives de 2022 dans l'Isère,total_coalition_wikipedia
+39,24983,24983,0,25.98,Wikipédia - Élections législatives de 2022 dans le Jura,total_coalition_wikipedia
+40,53877,53877,0,31.05,Wikipédia - Élections législatives de 2022 dans les Landes,total_coalition_wikipedia
+41,24720,24720,0,20.21,Wikipédia - Élections législatives de 2022 en Loir-et-Cher,total_coalition_wikipedia
+42,55358,55358,0,22.76,Wikipédia - Élections législatives de 2022 dans la Loire,total_coalition_wikipedia
+43,18099,18099,0,19.32,Wikipédia - Élections législatives de 2022 dans la Haute-Loire,total_coalition_wikipedia
+44,182738,182739,-1,34.37,Wikipédia - Élections législatives de 2022 dans la Loire-Atlantique,total_coalition_wikipedia
+45,50863,50863,0,22.97,Wikipédia - Élections législatives de 2022 dans le Loiret,total_coalition_wikipedia
+48,8637,8637,0,25.41,Wikipédia - Élections législatives de 2022 en Lozère,total_coalition_wikipedia
+49,75940,75940,0,26.95,Wikipédia - Élections législatives de 2022 en Maine-et-Loire,total_coalition_wikipedia
+51,31885,31885,0,18.67,Wikipédia - Élections législatives de 2022 dans la Marne,total_coalition_wikipedia
+53,33009,33009,0,31.08,Wikipédia - Élections législatives de 2022 dans la Mayenne,total_coalition_wikipedia
+54,68436,52043,16393,30.92,Wikipédia - Élections législatives de 2022 en Meurthe-et-Moselle,total_coalition_wikipedia
+55,10590,10590,0,16.95,Wikipédia - Élections législatives de 2022 dans la Meuse,total_coalition_wikipedia
+56,76683,76683,0,24.35,Wikipédia - Élections législatives de 2022 dans le Morbihan,total_coalition_wikipedia
+57,62106,62106,0,20.58,Wikipédia - Élections législatives de 2022 en Moselle,total_coalition_wikipedia
+58,18867,18867,0,24.98,Wikipédia - Élections législatives de 2022 dans la Nièvre,total_coalition_wikipedia
+59,209937,209937,0,26.45,Wikipédia - Élections législatives de 2022 dans le Nord,total_coalition_wikipedia
+60,52633,52633,0,20.23,Wikipédia - Élections législatives de 2022 dans l'Oise,total_coalition_wikipedia
+62,99458,99458,0,20.07,Wikipédia - Élections législatives de 2022 dans le Pas-de-Calais,total_coalition_wikipedia
+63,88834,88834,0,37.52,Wikipédia - Élections législatives de 2022 dans le Puy-de-Dôme,total_coalition_wikipedia
+64,64589,64589,0,24.06,Wikipédia - Élections législatives de 2022 dans les Pyrénées-Atlantiques,total_coalition_wikipedia
+65,22044,22044,0,23.83,Wikipédia - Élections législatives de 2022 dans les Hautes-Pyrénées,total_coalition_wikipedia
+66,38645,38645,0,22.74,Wikipédia - Élections législatives de 2022 dans les Pyrénées-Orientales,total_coalition_wikipedia
+67,72443,72443,0,20.33,Wikipédia - Élections législatives de 2022 dans le Bas-Rhin,total_coalition_wikipedia
+68,37028,37028,0,16.17,Wikipédia - Élections législatives de 2022 dans le Haut-Rhin,total_coalition_wikipedia
+69,168215,168215,0,28.27,Wikipédia - Élections législatives de 2022 dans le Rhône,total_coalition_wikipedia
+70,17719,17719,0,19.81,Wikipédia - Élections législatives de 2022 dans la Haute-Saône,total_coalition_wikipedia
+71,48616,48616,0,25.22,Wikipédia - Élections législatives de 2022 en Saône-et-Loire,total_coalition_wikipedia
+72,44410,44410,0,24.26,Wikipédia - Élections législatives de 2022 dans la Sarthe,total_coalition_wikipedia
+74,57388,57388,0,22.42,Wikipédia - Élections législatives de 2022 en Haute-Savoie,total_coalition_wikipedia
+75,280578,280578,0,37.69,Wikipédia - Élections législatives de 2022 à Paris,total_coalition_wikipedia
+77,111828,111828,0,28.53,Wikipédia - Élections législatives de 2022 en Seine-et-Marne,total_coalition_wikipedia
+78,120692,120692,0,24.49,Wikipédia - Élections législatives de 2022 dans les Yvelines,total_coalition_wikipedia
+79,39231,39231,0,29.51,Wikipédia - Élections législatives de 2022 dans les Deux-Sèvres,total_coalition_wikipedia
+80,49107,49107,0,24.88,Wikipédia - Élections législatives de 2022 dans la Somme,total_coalition_wikipedia
+81,39237,39237,0,24.83,Wikipédia - Élections législatives de 2022 dans le Tarn,total_coalition_wikipedia
+82,25035,25035,0,26.00,Wikipédia - Élections législatives de 2022 en Tarn-et-Garonne,total_coalition_wikipedia
+83,60644,60644,0,16.17,Wikipédia - Élections législatives de 2022 dans le Var,total_coalition_wikipedia
+84,41676,41676,0,21.95,Wikipédia - Élections législatives de 2022 en Vaucluse,total_coalition_wikipedia
+85,53464,53464,0,20.17,Wikipédia - Élections législatives de 2022 dans la Vendée,total_coalition_wikipedia
+86,42888,42888,0,28.06,Wikipédia - Élections législatives de 2022 dans la Vienne,total_coalition_wikipedia
+88,23593,23593,0,17.55,Wikipédia - Élections législatives de 2022 dans les Vosges,total_coalition_wikipedia
+89,25054,25054,0,21.51,Wikipédia - Élections législatives de 2022 dans l'Yonne,total_coalition_wikipedia
+90,10771,10771,0,23.82,Wikipédia - Élections législatives de 2022 dans le Territoire de Belfort,total_coalition_wikipedia
+91,122455,122455,0,32.52,Wikipédia - Élections législatives de 2022 dans l'Essonne,total_coalition_wikipedia
+92,147196,147196,0,28.09,Wikipédia - Élections législatives de 2022 dans les Hauts-de-Seine,total_coalition_wikipedia
+93,139909,139909,0,45.98,Wikipédia - Élections législatives de 2022 dans la Seine-Saint-Denis,total_coalition_wikipedia
+94,138274,138274,0,36.90,Wikipédia - Élections législatives de 2022 dans le Val-de-Marne,total_coalition_wikipedia
+95,97919,97919,0,31.27,Wikipédia - Élections législatives de 2022 dans le Val-d'Oise,total_coalition_wikipedia
+971,25089,25089,0,33.40,Wikipédia - Élections législatives de 2022 en Guadeloupe,total_coalition_wikipedia
+973,6040,6040,0,22.53,Wikipédia - Élections législatives de 2022 en Guyane,total_coalition_wikipedia
+974,57373,57373,0,29.70,Wikipédia - Élections législatives de 2022 à La Réunion,total_coalition_wikipedia
+986,0,0,0,0,Wikipédia - Élections législatives de 2022 à Wallis-et-Futuna,total_coalition_wikipedia
+988,0,0,0,0,Wikipédia - Élections législatives de 2022 en Nouvelle-Calédonie,total_coalition_wikipedia
+ZX,0,0,0,0,Wikipédia - Élections législatives de 2022 à Saint-Barthélemy et Saint-Martin,total_coalition_wikipedia

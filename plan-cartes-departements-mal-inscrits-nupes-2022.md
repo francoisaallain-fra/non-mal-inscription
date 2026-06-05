@@ -312,7 +312,7 @@ Normalisation :
 ```text
 score_mal_inscription = rang_percentile(part_mal_inscrits)
 score_nupes = rang_percentile(part_nupes_exprimes)
-score_croise = (score_mal_inscription + score_nupes) / 2
+score_croise = sqrt(score_mal_inscription * score_nupes)
 ```
 
 Gradient demandé :
@@ -329,6 +329,10 @@ rouge intense : score_mal_inscription < 0.33 et score_nupes < 0.33
 vert intense  : score_mal_inscription > 0.66 et score_nupes > 0.66
 intermédiaire : gradient rouge-jaune-vert selon score_croise
 ```
+
+La moyenne géométrique est retenue pour privilégier les départements élevés
+simultanément sur les deux variables et éviter qu'un score très fort compense
+entièrement un score très faible.
 
 Point important :
 
@@ -407,7 +411,7 @@ Cartes :
 ```text
 maps/2022-mal-inscrits-departements.html
 maps/2022-vote-nupes-departements.html
-maps/2022-croisement-mal-inscrits-nupes-departements.html
+maps/2022-croisement-mal-inscrits-nupes-departements-coalition.html
 ```
 
 Documentation :

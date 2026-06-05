@@ -56,19 +56,10 @@ QA_TOTALS_T2 = ROOT / "data/04_analysis/qa/2022-controles-totaux-nupes-departeme
 MAPS = {
     "mal": ROOT / "maps/2022-mal-inscrits-departements.html",
     "nupes": ROOT / "maps/2022-vote-nupes-departements.html",
-    "nupes_v6_insee_style": ROOT
-    / "maps/2022-vote-nupes-departements-v6-style-insee.html",
-    "cross": ROOT / "maps/2022-croisement-mal-inscrits-nupes-departements.html",
-    "cross_v2": ROOT
-    / "maps/2022-croisement-mal-inscrits-nupes-departements-v2.html",
-    "cross_v3": ROOT
-    / "maps/2022-croisement-mal-inscrits-nupes-departements-v3.html",
-    "cross_v4": ROOT
-    / "maps/2022-croisement-mal-inscrits-nupes-departements-v4.html",
-    "cross_v5": ROOT
-    / "maps/2022-croisement-mal-inscrits-nupes-departements-v5.html",
-    "cross_v6": ROOT
-    / "maps/2022-croisement-mal-inscrits-nupes-departements-v6.html",
+    "nupes_coalition_insee_style": ROOT
+    / "maps/2022-vote-nupes-departements-coalition-style-insee.html",
+    "cross_coalition": ROOT
+    / "maps/2022-croisement-mal-inscrits-nupes-departements-coalition.html",
     "cross_t1_ministry": ROOT
     / "maps/2022-croisement-mal-inscrits-nupes-departements-t1-ministere-legis2022.html",
     "cross_t2": ROOT
@@ -145,6 +136,11 @@ def to_int(value):
     return int(value) if value else 0
 
 
+def to_source_percent(value):
+    value = str(value or "").strip().replace(",", ".")
+    return float(value) / 100 if value else None
+
+
 def normalize_circonscription(value):
     return str(value).strip().zfill(2)
 
@@ -180,8 +176,8 @@ def load_wikipedia_overrides():
             dep = row["code_departement"].strip()
             overrides[dep] = {
                 "voix_nupes": to_int(row["voix_nupes_wikipedia_t1"]),
-                "part_nupes_wikipedia": row.get(
-                    "pourcentage_nupes_wikipedia_t1", ""
+                "part_nupes_exprimes": to_source_percent(
+                    row.get("pourcentage_nupes_wikipedia_t1")
                 ),
                 "source_nupes": row.get("source", "Wikipédia"),
                 "methode_nupes": row.get(
@@ -274,6 +270,7 @@ def aggregate_nupes_t1(
                     "libelle_departement": line[libelle_departement_idx],
                     "methode_nupes": "calcul_candidats",
                     "source_nupes": "Ministère de l'Intérieur T1 + Legis-2022",
+                    "source_exprimes": "Ministère de l'Intérieur T1",
                     "bureaux": 0,
                     "inscrits": 0,
                     "votants": 0,
@@ -320,28 +317,45 @@ def aggregate_nupes_t1(
         if dep in wikipedia_overrides:
             override = wikipedia_overrides[dep]
             row["voix_nupes"] = override["voix_nupes"]
+            row["part_nupes_exprimes_source"] = override["part_nupes_exprimes"]
             row["methode_nupes"] = override["methode_nupes"]
             row["source_nupes"] = override["source_nupes"]
         elif use_overrides and dep in OFFICIAL_OVERSEAS_NUPES_T1:
             row["voix_nupes"] = OFFICIAL_OVERSEAS_NUPES_T1[dep]
+            row["part_nupes_exprimes_source"] = None
             row["methode_nupes"] = "total_coalition_officiel"
             row["source_nupes"] = "Totaux officiels de coalition"
         elif use_overrides and dep in OFFICIAL_CORSICA_NUPES_T1:
             row["voix_nupes"] = OFFICIAL_CORSICA_NUPES_T1[dep]
+            row["part_nupes_exprimes_source"] = None
             row["methode_nupes"] = "total_coalition_officiel_corse"
             row["source_nupes"] = "Totaux officiels de coalition Corse"
         row.setdefault("source_nupes", "Ministère de l'Intérieur T1 + Legis-2022")
         exprimes = row["exprimes"]
         inscrits = row["inscrits"]
+        source_part = row.get("part_nupes_exprimes_source")
+        if use_overrides and row["methode_nupes"] != "calcul_candidats":
+            part_nupes_exprimes = source_part
+            part_nupes_inscrits = None
+            methode_part = (
+                "pourcentage_source_coalition"
+                if source_part is not None
+                else "indisponible_sans_denominateur_coherent"
+            )
+        else:
+            part_nupes_exprimes = row["voix_nupes"] / exprimes if exprimes else None
+            part_nupes_inscrits = row["voix_nupes"] / inscrits if inscrits else None
+            methode_part = "ratio_ministere"
         rows.append(
             {
                 **row,
-                "part_nupes_exprimes": f"{row['voix_nupes'] / exprimes:.6f}"
-                if exprimes
+                "part_nupes_exprimes": f"{part_nupes_exprimes:.6f}"
+                if part_nupes_exprimes is not None
                 else "",
-                "part_nupes_inscrits": f"{row['voix_nupes'] / inscrits:.6f}"
-                if inscrits
+                "part_nupes_inscrits": f"{part_nupes_inscrits:.6f}"
+                if part_nupes_inscrits is not None
                 else "",
+                "methode_part_nupes_exprimes": methode_part,
             }
         )
 
@@ -374,8 +388,16 @@ def aggregate_nupes_t1(
             {
                 "scope": qa_scope,
                 **national,
-                "part_nupes_exprimes": f"{national['voix_nupes'] / national['exprimes']:.6f}",
-                "methode": qa_method,
+                "part_nupes_exprimes": ""
+                if use_overrides
+                else f"{national['voix_nupes'] / national['exprimes']:.6f}",
+                "methode": qa_method
+                + (
+                    " ; taux national non calculé car les pourcentages de coalition "
+                    "proviennent de sources départementales distinctes"
+                    if use_overrides
+                    else ""
+                ),
             }
         )
 
@@ -432,6 +454,7 @@ def aggregate_nupes_t2():
                     "libelle_departement": line[libelle_departement_idx],
                     "methode_nupes": "calcul_candidats_t2",
                     "source_nupes": "Ministère de l'Intérieur T2 + Legis-2022",
+                    "source_exprimes": "Ministère de l'Intérieur T2",
                     "bureaux": 0,
                     "inscrits": 0,
                     "votants": 0,
@@ -484,6 +507,7 @@ def aggregate_nupes_t2():
                 "part_nupes_inscrits": f"{row['voix_nupes'] / inscrits:.6f}"
                 if inscrits
                 else "",
+                "methode_part_nupes_exprimes": "ratio_ministere",
             }
         )
 
@@ -572,8 +596,14 @@ def enrich_geojson(
                 props[key] = int(nupes[key])
             props["methode_nupes"] = nupes["methode_nupes"]
             props["source_nupes"] = nupes["source_nupes"]
-            props["part_nupes_exprimes"] = float(nupes["part_nupes_exprimes"])
-            props["part_nupes_inscrits"] = float(nupes["part_nupes_inscrits"])
+            props["source_exprimes"] = nupes["source_exprimes"]
+            props["methode_part_nupes_exprimes"] = nupes[
+                "methode_part_nupes_exprimes"
+            ]
+            if nupes["part_nupes_exprimes"]:
+                props["part_nupes_exprimes"] = float(nupes["part_nupes_exprimes"])
+            if nupes["part_nupes_inscrits"]:
+                props["part_nupes_inscrits"] = float(nupes["part_nupes_inscrits"])
         else:
             unmatched.append({"code_departement": dep, "dataset": "vote_nupes"})
 
@@ -599,8 +629,12 @@ def enrich_geojson(
             props[key] = int(nupes[key])
         props["methode_nupes"] = nupes["methode_nupes"]
         props["source_nupes"] = nupes["source_nupes"]
-        props["part_nupes_exprimes"] = float(nupes["part_nupes_exprimes"])
-        props["part_nupes_inscrits"] = float(nupes["part_nupes_inscrits"])
+        props["source_exprimes"] = nupes["source_exprimes"]
+        props["methode_part_nupes_exprimes"] = nupes["methode_part_nupes_exprimes"]
+        if nupes["part_nupes_exprimes"]:
+            props["part_nupes_exprimes"] = float(nupes["part_nupes_exprimes"])
+        if nupes["part_nupes_inscrits"]:
+            props["part_nupes_inscrits"] = float(nupes["part_nupes_inscrits"])
         geojson["features"].append(
             {
                 "type": "Feature",
@@ -625,7 +659,8 @@ def enrich_geojson(
             continue
         props["score_mal_inscription"] = round(mal_score, 6)
         props["score_nupes"] = round(nupes_score, 6)
-        props["score_croise"] = round((mal_score + nupes_score) / 2, 6)
+        props["score_croise"] = round(math.sqrt(mal_score * nupes_score), 6)
+        props["methode_score_croise"] = "moyenne_geometrique_des_rangs_percentiles"
 
     json.dump(
         geojson,
@@ -790,7 +825,7 @@ def map_html(geojson, mode, title, subtitle, variable_label, source_note):
         "mal": "Faible part de mal-inscrits → forte part",
         "nupes": "Faible vote NUPES → fort vote NUPES",
         "nupes_insee_style": "Rose clair : faible vote NUPES · Bordeaux : fort vote NUPES",
-        "cross": "Rouge : faible/faible · Vert : fort/fort",
+        "cross": "Rouge : faible sur au moins un axe · Vert : fort sur les deux axes",
     }[mode]
     class_legend = (
         nupes_insee_style_legend_html(geojson)
@@ -1016,12 +1051,13 @@ def map_html(geojson, mode, title, subtitle, variable_label, source_note):
       title.textContent = p.libelle_departement + " (" + p.code_departement + ")";
       details.innerHTML = `
         <strong>Mal-inscription</strong>${{pct(p.part_mal_inscrits)}}
-        <br><br><strong>Vote NUPES T1 / exprimés</strong>${{pct(p.part_nupes_exprimes)}}
-        <br><br><strong>Vote NUPES T1 / inscrits</strong>${{pct(p.part_nupes_inscrits)}}
+        <br><br><strong>Vote NUPES / exprimés</strong>${{pct(p.part_nupes_exprimes)}}
+        <br><br><strong>Vote NUPES / inscrits</strong>${{pct(p.part_nupes_inscrits)}}
         <br><br><strong>Classe NUPES</strong>${{p.classe_nupes_insee_style || "n.d."}}
         <br><br><strong>Voix NUPES</strong>${{integer(p.voix_nupes)}}
-        <br><br><strong>Exprimés</strong>${{integer(p.exprimes)}}
+        <br><br><strong>Exprimés ministère (contrôle)</strong>${{integer(p.exprimes)}}
         <br><br><strong>Méthode NUPES</strong>${{method(p.methode_nupes)}}
+        <br><br><strong>Méthode du pourcentage</strong>${{p.methode_part_nupes_exprimes || "n.d."}}
         <br><br><strong>Source NUPES</strong>${{p.source_nupes || "n.d."}}
       `;
     }}
@@ -1045,10 +1081,11 @@ def map_html(geojson, mode, title, subtitle, variable_label, source_note):
 
 def write_maps(geojson, geojson_t1_ministry, geojson_t2):
     source_note = (
-        "V1 exploratoire. Mal-inscription : INSEE Première n°1986, Figure 4. "
+        "Mal-inscription : INSEE Première n°1986, Figure 4. "
         "Vote NUPES : ministère de l'Intérieur via Hexagonal, législatives 2022 tour 1 ; "
-        "totaux de coalition Wikipédia utilisés par département quand ils sont extraits, "
-        "avec repli sur le calcul candidat par candidat et les corrections officielles déjà identifiées. "
+        "voix et pourcentages de coalition Wikipédia utilisés ensemble quand ils sont disponibles. "
+        "Une correction sans pourcentage source cohérent reste sans taux cartographié. "
+        "Le score croisé est la moyenne géométrique des deux rangs percentiles. "
         "Fond : GeoJSON simplifié des départements avec outre-mer rapprochée. "
         "Mayotte est affichée sans donnée de mal-inscription dans la source INSEE."
     )
@@ -1074,79 +1111,24 @@ def write_maps(geojson, geojson_t1_ministry, geojson_t2):
         ),
         encoding="utf-8",
     )
-    MAPS["nupes_v6_insee_style"].write_text(
+    MAPS["nupes_coalition_insee_style"].write_text(
         map_html(
             geojson,
             "nupes_insee_style",
-            "Vote NUPES en 2022 par département - style INSEE",
-            "Premier tour des législatives 2022, données V6 : totaux Wikipédia de coalition quand disponibles, repli Hexagonal/ministère.",
+            "Vote NUPES en 2022 par département - coalition contrôlée",
+            "Premier tour : pourcentages Wikipédia de coalition quand disponibles, calcul ministère/Legis-2022 sinon.",
             "Part NUPES parmi les exprimés, en 4 classes par quartiles",
             source_note,
         ),
         encoding="utf-8",
     )
-    MAPS["cross"].write_text(
+    MAPS["cross_coalition"].write_text(
         map_html(
             geojson,
             "cross",
-            "Croisement mal-inscription x vote NUPES en 2022",
-            "Rouge : niveaux faibles sur les deux variables. Vert : niveaux élevés sur les deux variables.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES",
-            source_note,
-        ),
-        encoding="utf-8",
-    )
-    MAPS["cross_v2"].write_text(
-        map_html(
-            geojson,
-            "cross",
-            "Croisement mal-inscription x vote NUPES en 2022 - v2 outre-mer",
-            "Rouge : niveaux faibles sur les deux variables. Vert : niveaux élevés sur les deux variables. Les territoires sans donnée INSEE de mal-inscription restent neutres.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES",
-            source_note,
-        ),
-        encoding="utf-8",
-    )
-    MAPS["cross_v3"].write_text(
-        map_html(
-            geojson,
-            "cross",
-            "Croisement mal-inscription x vote NUPES en 2022 - v3 outre-mer corrigé",
-            "Les voix NUPES ultramarines utilisent les totaux officiels de coalition ; les territoires sans donnée INSEE de mal-inscription restent neutres.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES",
-            source_note,
-        ),
-        encoding="utf-8",
-    )
-    MAPS["cross_v4"].write_text(
-        map_html(
-            geojson,
-            "cross",
-            "Croisement mal-inscription x vote NUPES en 2022 - v4 Corse intégrée",
-            "La Corse inclut les candidats codés NUPES-LFI ou NUPES-PC par Legis-2022 ; les outre-mer utilisent les totaux de coalition territoriaux.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES",
-            source_note,
-        ),
-        encoding="utf-8",
-    )
-    MAPS["cross_v5"].write_text(
-        map_html(
-            geojson,
-            "cross",
-            "Croisement mal-inscription x vote NUPES en 2022 - v5 Corse corrigée",
-            "La Corse et les outre-mer utilisent les totaux officiels de coalition ; les territoires sans donnée INSEE de mal-inscription restent neutres.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES",
-            source_note,
-        ),
-        encoding="utf-8",
-    )
-    MAPS["cross_v6"].write_text(
-        map_html(
-            geojson,
-            "cross",
-            "Croisement mal-inscription x vote NUPES en 2022 - v6 Wikipédia",
-            "Les voix NUPES utilisent les totaux Wikipédia de coalition par département quand disponibles ; les autres départements gardent le calcul candidat par candidat.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES",
+            "Croisement mal-inscription x vote NUPES en 2022 - coalition contrôlée",
+            "Rouge : faible sur au moins une dimension. Vert : élevé simultanément sur les deux dimensions.",
+            "Moyenne géométrique des rangs de mal-inscription et de vote NUPES",
             source_note,
         ),
         encoding="utf-8",
@@ -1157,7 +1139,7 @@ def write_maps(geojson, geojson_t1_ministry, geojson_t2):
             "cross",
             "Croisement mal-inscription x vote NUPES en 2022 - premier tour source ministère",
             "Vote NUPES au premier tour des législatives 2022, calculé avec les mêmes sources que la carte du second tour.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES au premier tour",
+            "Moyenne géométrique des rangs de mal-inscription et de vote NUPES au premier tour",
             "Mal-inscription : INSEE Première n°1986, Figure 4. Vote NUPES T1 : ministère de l'Intérieur via Hexagonal, législatives 2022 tour 1, avec identification des candidats NUPES par nuance NUP et Legis-2022. Cette carte n'utilise pas les totaux Wikipédia de coalition, afin d'être comparable avec la carte du second tour. Les territoires sans donnée INSEE de mal-inscription restent neutres.",
         ),
         encoding="utf-8",
@@ -1168,7 +1150,7 @@ def write_maps(geojson, geojson_t1_ministry, geojson_t2):
             "cross",
             "Croisement mal-inscription x vote NUPES en 2022 - second tour",
             "Vote NUPES au second tour des législatives 2022, calculé sur les circonscriptions où un second tour a eu lieu.",
-            "Score croisé entre rang de mal-inscription et rang de vote NUPES au second tour",
+            "Moyenne géométrique des rangs de mal-inscription et de vote NUPES au second tour",
             "Mal-inscription : INSEE Première n°1986, Figure 4. Vote NUPES T2 : ministère de l'Intérieur via Hexagonal, législatives 2022 tour 2, avec identification des candidats NUPES par nuance NUP et Legis-2022. Les départements sans candidat NUPES au second tour peuvent apparaître à 0. Les territoires sans donnée INSEE de mal-inscription restent neutres.",
         ),
         encoding="utf-8",

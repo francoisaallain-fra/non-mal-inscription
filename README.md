@@ -94,9 +94,11 @@ les données Hexagonal et l'extraction des pages Wikipédia.
 | Fichier | Contenu |
 |---|---|
 | [`data/04_analysis/geodata/departements-2022.geojson`](data/04_analysis/geodata/departements-2022.geojson) | Fond géographique départemental, avec outre-mer rapproché |
-| [`data/04_analysis/cartographie/2022-departements-mal-inscription-nupes.geojson`](data/04_analysis/cartographie/2022-departements-mal-inscription-nupes.geojson) | Jointure finale utilisée pour la V6 du premier tour |
+| [`data/04_analysis/cartographie/2022-departements-mal-inscription-nupes.geojson`](data/04_analysis/cartographie/2022-departements-mal-inscription-nupes.geojson) | Jointure finale de la méthode « coalition contrôlée » du premier tour |
 | [`data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t1-ministere-legis2022.geojson`](data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t1-ministere-legis2022.geojson) | Premier tour calculé uniquement avec les mêmes sources que le second tour |
 | [`data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t2.geojson`](data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t2.geojson) | Jointure du second tour |
+| [`data/04_analysis/elections/`](data/04_analysis/elections/) | Agrégats électoraux et table des valeurs Wikipédia |
+| [`data/04_analysis/qa/`](data/04_analysis/qa/) | Contrôles de couverture et de totaux |
 
 ## Construction de l'indicateur NUPES
 
@@ -133,25 +135,50 @@ Les premières cartes faisaient donc apparaître des valeurs manifestement
 incomplètes, surtout dans les outre-mer, en Corse et dans quelques départements
 métropolitains.
 
-### Méthode V6
+### Méthode « coalition contrôlée »
 
-La V6 conserve les dénominateurs départementaux issus des résultats du
-ministère, mais remplace le nombre de voix NUPES par le total de coalition
-affiché sur la page Wikipédia départementale lorsqu'il a pu être extrait.
+La méthode utilise ensemble le nombre de voix et le pourcentage de coalition
+affichés sur la page Wikipédia départementale lorsqu'ils ont pu être extraits.
+Elle ne calcule plus un taux hybride avec un numérateur Wikipédia et un
+dénominateur ministère.
 
 La méthode devient :
 
 ```text
-si total de coalition Wikipédia disponible :
+si voix et pourcentage de coalition Wikipédia disponibles :
     voix_nupes = total de coalition Wikipédia
+    part_nupes_exprimes = pourcentage Wikipédia
 sinon :
     voix_nupes = calcul ministère + Legis-2022
-                 ou correction territoriale déjà identifiée
+    part_nupes_exprimes = voix_nupes / exprimés ministère
+
+si une correction de voix existe sans pourcentage source cohérent :
+    part_nupes_exprimes = indisponible
 ```
 
 Au terme du contrôle, 100 départements ou territoires utilisent un total de
 coalition extrait de Wikipédia. Sept territoires conservent un repli sur les
-totaux territoriaux déjà identifiés.
+totaux territoriaux déjà identifiés ; lorsque leur pourcentage de coalition
+n'est pas disponible dans la même source, ils ne participent pas au classement
+cartographique.
+
+La colonne `exprimes` est conservée pour contrôler les données du ministère,
+mais elle n'est pas utilisée pour recalculer les pourcentages Wikipédia. La
+colonne `methode_part_nupes_exprimes` indique explicitement la méthode employée.
+
+## Décisions prises après revue méthodologique
+
+Trois commentaires de revue ont conduit aux changements suivants :
+
+1. **Fin du ratio hybride Wikipédia/ministère.** Les pourcentages Wikipédia
+   sont utilisés directement avec les voix Wikipédia. Une correction de voix
+   dépourvue de pourcentage source cohérent reste sans taux.
+2. **Fin du faux versionnement cartographique.** Les anciennes cartes V2 à V6,
+   qui utilisaient toutes le même GeoJSON final, ont été retirées. Les versions
+   restent uniquement comme historique de l'investigation.
+3. **Moyenne géométrique pour le croisement.** Le score croisé est désormais
+   `sqrt(score_mal_inscription * score_nupes)`, afin qu'un département ne soit
+   considéré élevé que s'il l'est réellement sur les deux dimensions.
 
 ## Erreurs détectées et corrigées
 
@@ -180,7 +207,7 @@ Corse-du-Sud : 4 667 voix, soit 9,47 %
 Haute-Corse  : 4 828 voix, soit 8,54 %
 ```
 
-Ces résultats sont désormais repris dans la V6 depuis les pages Wikipédia
+Ces résultats sont désormais repris dans la méthode de coalition contrôlée depuis les pages Wikipédia
 départementales.
 
 ### Meurthe-et-Moselle
@@ -231,7 +258,7 @@ Le pipeline harmonise également :
 Mayotte et plusieurs collectivités restent sans valeur de mal-inscription, car
 elles ne sont pas couvertes par la figure départementale Insee utilisée.
 
-## Évolution des cartes
+## Évolution de l'investigation
 
 | Version | Évolution principale |
 |---|---|
@@ -242,12 +269,17 @@ elles ne sont pas couvertes par la figure départementale Insee utilisée.
 | V5 | Correction explicite des totaux de Corse |
 | V6 | Contrôle département par département avec les totaux de coalition Wikipédia |
 
+Ces versions décrivent le cheminement de l'enquête sur les données. Elles ne
+constituent plus des cartes publiées distinctes : dans le code initial, V2 à V6
+étaient toutes régénérées avec le même GeoJSON final, malgré des titres
+différents. Ces sorties redondantes ont été supprimées.
+
 Les principales cartes sont :
 
 - [mal-inscription par département](maps/2022-mal-inscrits-departements.html) ;
-- [vote NUPES V6 par département](maps/2022-vote-nupes-departements.html) ;
-- [vote NUPES V6, palette inspirée de l'Insee](maps/2022-vote-nupes-departements-v6-style-insee.html) ;
-- [croisement mal-inscription x NUPES V6](maps/2022-croisement-mal-inscrits-nupes-departements-v6.html) ;
+- [vote NUPES par département, coalition contrôlée](maps/2022-vote-nupes-departements.html) ;
+- [vote NUPES, coalition contrôlée et palette inspirée de l'Insee](maps/2022-vote-nupes-departements-coalition-style-insee.html) ;
+- [croisement mal-inscription x NUPES, coalition contrôlée](maps/2022-croisement-mal-inscrits-nupes-departements-coalition.html) ;
 - [croisement au premier tour, sources comparables au second tour](maps/2022-croisement-mal-inscrits-nupes-departements-t1-ministere-legis2022.html) ;
 - [croisement au second tour](maps/2022-croisement-mal-inscrits-nupes-departements-t2.html).
 
@@ -260,19 +292,22 @@ Chaque variable est transformée en rang percentile parmi les départements :
 ```text
 score_mal_inscription = rang percentile de part_mal_inscrits
 score_nupes = rang percentile de part_nupes_exprimes
-score_croise = (score_mal_inscription + score_nupes) / 2
+score_croise = racine(score_mal_inscription * score_nupes)
 ```
 
-Le gradient demandé est ensuite appliqué :
+La moyenne géométrique est retenue afin de représenter une présence élevée
+**simultanément** sur les deux dimensions. Contrairement à une moyenne
+arithmétique, un score très élevé sur un axe compense moins facilement un score
+très faible sur l'autre.
+
+Le gradient est ensuite appliqué :
 
 ```text
-rouge : faibles niveaux de mal-inscription et de vote NUPES
+rouge : niveau faible sur au moins une des deux dimensions
 vert  : niveaux élevés de mal-inscription et de vote NUPES
 ```
 
-Ce score est exploratoire. Il résume bien les territoires où les deux variables
-évoluent dans le même sens, mais distingue moins clairement les situations
-discordantes, par exemple forte mal-inscription et faible vote NUPES.
+Ce score reste exploratoire et ne constitue pas un test statistique.
 
 ### Carte NUPES de style Insee
 
@@ -280,13 +315,14 @@ La carte rose-bordeaux répartit les départements en quartiles de la part NUPES
 parmi les exprimés :
 
 ```text
-moins de 21,5 %
-de 21,5 % à 24,8 %
-de 24,8 % à 28,6 %
-plus de 28,6 %
+moins de 21,9 %
+de 21,9 % à 24,9 %
+de 24,9 % à 28,7 %
+plus de 28,7 %
 ```
 
-Les seuils sont affichés directement dans la légende de la carte.
+Les seuils sont affichés directement dans la légende de la carte et sont
+recalculés sur les 100 territoires disposant d'un pourcentage cohérent.
 
 ## Premier et second tours
 
@@ -307,8 +343,9 @@ T1 ministère + Legis-2022 : 5 977 283 voix NUPES, 26,28 % des exprimés
 T2 ministère + Legis-2022 : 6 797 881 voix NUPES, 32,76 % des exprimés
 ```
 
-La V6 du premier tour, enrichie par les totaux de coalition Wikipédia, atteint
-`6 028 524` voix et `26,51 %` des exprimés dans le périmètre calculé.
+Le total de voix de coalition contrôlée peut être additionné, mais aucun taux
+national n'est calculé en mélangeant les dénominateurs ministère et les
+pourcentages départementaux Wikipédia.
 
 ## Reproduire les cartes
 
@@ -329,7 +366,7 @@ Le script :
 
 1. extrait la figure 4 du fichier Insee ;
 2. agrège les résultats NUPES des premier et second tours ;
-3. applique les corrections V6 au premier tour ;
+3. applique les valeurs de coalition contrôlées au premier tour ;
 4. joint les résultats au fond départemental ;
 5. calcule les scores et couleurs ;
 6. génère les GeoJSON et les cartes HTML interactives.
@@ -340,7 +377,7 @@ Le script :
   conclure que les personnes mal inscrites votent davantage NUPES.
 - La variable Insee ne correspond pas toujours juridiquement à une
   mal-inscription.
-- La V6 dépend de totaux de coalition issus de pages Wikipédia, dont la méthode
+- La méthode de coalition contrôlée dépend de pages Wikipédia, dont la méthode
   de regroupement doit rester documentée et contrôlée.
 - Le second tour est structurellement affecté par la sélection des candidats.
 - Une analyse véritablement fine par bureau de vote nécessiterait une donnée

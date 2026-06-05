@@ -263,7 +263,7 @@ Créer deux scores normalisés :
 ```text
 score_mal_inscription = rang_percentile(part_mal_inscrits)
 score_nupes = rang_percentile(part_nupes_exprimes)
-score_croise = (score_mal_inscription + score_nupes) / 2
+score_croise = sqrt(score_mal_inscription * score_nupes)
 ```
 
 Palette demandée :
