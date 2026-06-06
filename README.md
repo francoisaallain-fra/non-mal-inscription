@@ -282,6 +282,7 @@ Les principales cartes sont :
 - [croisement mal-inscription x NUPES, coalition contrôlée](maps/2022-croisement-mal-inscrits-nupes-departements-coalition.html) ;
 - [croisement au premier tour, sources comparables au second tour](maps/2022-croisement-mal-inscrits-nupes-departements-t1-ministere-legis2022.html) ;
 - [croisement au second tour](maps/2022-croisement-mal-inscrits-nupes-departements-t2.html).
+- [tableau des 25 départements les plus intéressants](top-25-departements-mal-inscrits-nupes-2022.md).
 
 ## Méthode cartographique
 
@@ -308,6 +309,88 @@ vert  : niveaux élevés de mal-inscription et de vote NUPES
 ```
 
 Ce score reste exploratoire et ne constitue pas un test statistique.
+
+## Tableau des 25 départements les plus intéressants
+
+Après la production de la carte croisée, un tableau complémentaire a été
+construit pour identifier les 25 départements arrivant en tête selon le même
+score :
+
+```text
+score_croise = sqrt(score_mal_inscription * score_nupes)
+```
+
+Ce tableau est disponible ici :
+
+```text
+top-25-departements-mal-inscrits-nupes-2022.md
+```
+
+Il reprend, pour chaque département :
+
+- le rang selon le score croisé ;
+- la part de mal-inscription issue de l'Insee ;
+- la part de vote NUPES au premier tour, méthode coalition contrôlée ;
+- le score croisé ;
+- un effectif estimé de personnes mal inscrites ;
+- une projection grossière des 18-34 ans mal inscrits.
+
+### Reconstitution du nombre de mal-inscrits par département
+
+L'étude Insee Première n°1986 fournit dans sa figure 4 la part départementale
+des personnes inscrites dans une autre commune que leur commune de résidence
+principale. Elle ne fournit pas, dans cette figure, l'effectif brut par
+département.
+
+Pour obtenir une approximation exploitable dans le tableau, l'effectif a donc
+été reconstitué à partir des données déjà jointes dans le GeoJSON final :
+
+```text
+mal_inscrits_estimes =
+    part_mal_inscrits_insee
+    x inscrits_electoraux_du_departement
+```
+
+Exemple pour Paris :
+
+```text
+23,6 % x 1 362 500 inscrits environ = 321 550 mal-inscrits estimés
+```
+
+Le nombre d'inscrits utilisé provient des résultats électoraux agrégés au
+département dans le jeu de carte, c'est-à-dire des fichiers du ministère de
+l'Intérieur distribués via Hexagonal. Ce calcul donne donc un ordre de grandeur
+cohérent avec la carte, mais pas un effectif Insee officiel publié tel quel par
+département.
+
+La ligne de total du tableau additionne les effectifs estimés des 25
+départements affichés. Elle ne correspond pas à un total France entière. La part
+totale de mal-inscription y est recalculée comme une moyenne pondérée par les
+inscrits électoraux de ces 25 départements :
+
+```text
+part_mal_inscrits_top25 =
+    somme(mal_inscrits_estimes)
+    / somme(inscrits_electoraux)
+```
+
+### Projection des 18-34 ans mal inscrits
+
+La colonne « 18-34 ans mal-inscrits estimés » applique un ratio global de 52 %
+aux effectifs estimés de mal-inscrits :
+
+```text
+18_34_ans_mal_inscrits_estimes =
+    mal_inscrits_estimes x 0,52
+```
+
+Cette colonne est une **projection grossière**. Elle ne signifie pas que la part
+des 18-34 ans parmi les mal-inscrits est identique dans chaque département. Elle
+projette simplement sur chaque département une proportion globale observée dans
+l'étude Insee 2022 afin de donner un ordre de grandeur.
+
+Elle doit donc être lue comme une aide au ciblage exploratoire, pas comme une
+estimation démographique départementale robuste.
 
 ### Carte NUPES de style Insee
 
