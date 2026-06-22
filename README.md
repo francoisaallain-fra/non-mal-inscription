@@ -315,6 +315,22 @@ La carte en ligne utilise des contours géographiques simplifiés afin de
 réduire le fichier d'environ 4,1 Mo à 393 Ko. Les valeurs, scores et couleurs
 restent identiques.
 
+### Application Streamlit
+
+Les deux visualisations sont également intégrées dans une application
+Streamlit :
+
+```bash
+streamlit run streamlit_app.py
+```
+
+L'application propose :
+
+- un onglet pour la carte départementale ;
+- un onglet pour le nuage de points ;
+- une synthèse méthodologique ;
+- le téléchargement des deux fichiers HTML autonomes.
+
 ## Méthode cartographique
 
 ### Carte croisée
