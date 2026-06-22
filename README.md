@@ -64,6 +64,7 @@ nationalité française âgées de 18 ans ou plus.
 | Source | Utilisation | Adresse |
 |---|---|---|
 | Insee Première n°1986, figure 4 | Part départementale des personnes non inscrites dans leur commune de résidence principale | [insee.fr/fr/statistiques/7766966](https://www.insee.fr/fr/statistiques/7766966) |
+| Insee RP2022, dossiers complets départementaux | Populations par âge et populations scolarisées utilisées dans le tableau Top 25 | [insee.fr/fr/statistiques/2011101](https://www.insee.fr/fr/statistiques/2011101) |
 | Résultats du ministère de l'Intérieur, distribués dans Hexagonal | Résultats des législatives 2022 par bureau de vote, premier et second tours | [github.com/lafranceinsoumise/hexagonal](https://github.com/lafranceinsoumise/hexagonal) |
 | Table de codage Legis-2022 distribuée dans Hexagonal | Identification complémentaire des candidats rattachés à la NUPES | [github.com/lafranceinsoumise/hexagonal](https://github.com/lafranceinsoumise/hexagonal) |
 | Pages Wikipédia départementales des législatives de 2022 | Totaux de coalition NUPES au premier tour, utilisés pour corriger les sous-comptes | [Résultats par département](https://fr.wikipedia.org/wiki/R%C3%A9sultats_par_d%C3%A9partement_des_%C3%A9lections_l%C3%A9gislatives_fran%C3%A7aises_de_2022) |
@@ -98,6 +99,7 @@ les données Hexagonal et l'extraction des pages Wikipédia.
 | [`data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t1-ministere-legis2022.geojson`](data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t1-ministere-legis2022.geojson) | Premier tour calculé uniquement avec les mêmes sources que le second tour |
 | [`data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t2.geojson`](data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t2.geojson) | Jointure du second tour |
 | [`data/04_analysis/elections/`](data/04_analysis/elections/) | Agrégats électoraux et table des valeurs Wikipédia |
+| [`data/04_analysis/insee/2022-age-scolarisation-departements-top25.csv`](data/04_analysis/insee/2022-age-scolarisation-departements-top25.csv) | Populations 18-24, 25-29 et 30-44 ans et populations scolarisées du Top 25 |
 | [`data/04_analysis/qa/`](data/04_analysis/qa/) | Contrôles de couverture et de totaux |
 
 ## Construction de l'indicateur NUPES
@@ -179,6 +181,20 @@ Trois commentaires de revue ont conduit aux changements suivants :
 3. **Moyenne géométrique pour le croisement.** Le score croisé est désormais
    `sqrt(score_mal_inscription * score_nupes)`, afin qu'un département ne soit
    considéré élevé que s'il l'est réellement sur les deux dimensions.
+4. **Territorialisation de l'estimation des 18-34 ans.** L'application uniforme
+   de 52 % à tous les départements est conservée uniquement comme ancienne
+   méthode de comparaison. Une nouvelle estimation utilise les populations par
+   âge propres à chaque département.
+5. **Reproductibilité de l'extraction Wikipédia.** Le script ayant servi à
+   produire les totaux départementaux est désormais versionné et enregistre
+   l'URL, l'identifiant et la date de chaque révision utilisée.
+6. **Fiabilisation du calcul candidat par candidat.** Les premier et second
+   tours utilisent désormais un même moteur d'agrégation. Une voix vide dans
+   un bloc candidat n'interrompt plus la lecture des candidats suivants ; les
+   bureaux sont dédoublonnés par département, circonscription, commune et
+   numéro de bureau ; `bureaux_avec_nupes` et les voix ne sont comptés qu'une
+   fois par bureau. Les codes départementaux Insee suivent la même
+   normalisation que les données électorales.
 
 ## Erreurs détectées et corrigées
 
@@ -280,9 +296,24 @@ Les principales cartes sont :
 - [vote NUPES par département, coalition contrôlée](maps/2022-vote-nupes-departements.html) ;
 - [vote NUPES, coalition contrôlée et palette inspirée de l'Insee](maps/2022-vote-nupes-departements-coalition-style-insee.html) ;
 - [croisement mal-inscription x NUPES, coalition contrôlée](maps/2022-croisement-mal-inscrits-nupes-departements-coalition.html) ;
+- [croisement mal-inscription x NUPES, version web allégée](maps/2022-croisement-mal-inscrits-nupes-departements-coalition-web.html) ;
 - [croisement au premier tour, sources comparables au second tour](maps/2022-croisement-mal-inscrits-nupes-departements-t1-ministere-legis2022.html) ;
-- [croisement au second tour](maps/2022-croisement-mal-inscrits-nupes-departements-t2.html).
+- [croisement au second tour](maps/2022-croisement-mal-inscrits-nupes-departements-t2.html) ;
+- [nuage de points mal-inscription x vote NUPES](maps/2022-nuage-points-mal-inscrits-nupes-departements.html) ;
 - [tableau des 25 départements les plus intéressants](top-25-departements-mal-inscrits-nupes-2022.md).
+
+### Versions en ligne
+
+Le dépôt est privé. Pour permettre le partage sans rendre son contenu public,
+les deux visualisations suivantes sont publiées séparément sous forme de
+fichiers HTML autonomes :
+
+- [nuage de points en ligne](https://htmlpreview.github.io/?https://gist.githubusercontent.com/francoisaallain-fra/72d74b0fafba49ca3820bdb92919be67/raw/a72175e6a3f4dff7ffdbb0dea6a039f8e46cc05a/2022-nuage-points-mal-inscrits-nupes-departements.html) ;
+- [carte croisée départementale en ligne](https://htmlpreview.github.io/?https://gist.githubusercontent.com/francoisaallain-fra/6dd245021ce8159d7901961bdf9c9a48/raw/81e3e09f541a74d75f0d3b68422aa609cebff712/2022-croisement-mal-inscrits-nupes-departements-coalition-web.html).
+
+La carte en ligne utilise des contours géographiques simplifiés afin de
+réduire le fichier d'environ 4,1 Mo à 393 Ko. Les valeurs, scores et couleurs
+restent identiques.
 
 ## Méthode cartographique
 
@@ -333,7 +364,9 @@ Il reprend, pour chaque département :
 - la part de vote NUPES au premier tour, méthode coalition contrôlée ;
 - le score croisé ;
 - un effectif estimé de personnes mal inscrites ;
-- une projection grossière des 18-34 ans mal inscrits.
+- une estimation territorialisée des 18-34 ans mal inscrits ;
+- l'ancienne projection uniforme à 52 %, conservée à titre de comparaison ;
+- la population scolarisée de 18 à 29 ans.
 
 ### Reconstitution du nombre de mal-inscrits par département
 
@@ -374,23 +407,58 @@ part_mal_inscrits_top25 =
     / somme(inscrits_electoraux)
 ```
 
-### Projection des 18-34 ans mal inscrits
+### Estimation territorialisée des 18-34 ans mal inscrits
 
-La colonne « 18-34 ans mal-inscrits estimés » applique un ratio global de 52 %
-aux effectifs estimés de mal-inscrits :
+La méthode principale applique les taux nationaux par âge de la figure 3 de
+l'étude Insee aux populations d'âge de chaque département :
 
 ```text
-18_34_ans_mal_inscrits_estimes =
+population 18-24 ans x 38,7 %
++ population 25-29 ans x 35,18 %
++ (population 30-44 ans / 3) x 30,9 %
+```
+
+Les données d'âge proviennent des dossiers complets départementaux RP2022 :
+
+- les populations 18-24 ans et 25-29 ans viennent du tableau `FOR T1` ;
+- la population 30-34 ans est estimée par un tiers de la classe 30-44 ans du
+  tableau `POP T0` ;
+- le taux de 35,18 % répartit uniformément la classe 25-29 ans, avec un
+  cinquième à 38,7 % pour les 25 ans et quatre cinquièmes à 34,3 % pour les
+  26-29 ans.
+
+Cette méthode crée une variation départementale réelle, mais elle reste
+approximative. Les populations publiques utilisées ne sont pas limitées aux
+personnes de nationalité française, alors que l'étude sur la mal-inscription
+porte sur ce champ.
+
+### Ancienne méthode uniforme 52 %
+
+L'ancienne colonne est conservée avec un intitulé explicite :
+
+```text
+18_34_ans_ancienne_methode_52_pourcent =
     mal_inscrits_estimes x 0,52
 ```
 
-Cette colonne est une **projection grossière**. Elle ne signifie pas que la part
-des 18-34 ans parmi les mal-inscrits est identique dans chaque département. Elle
-projette simplement sur chaque département une proportion globale observée dans
-l'étude Insee 2022 afin de donner un ordre de grandeur.
+Elle ne crée pas d'information territoriale nouvelle et ne modifie pas le
+classement, puisque tous les départements sont multipliés par la même constante.
+Elle sert uniquement à comprendre et comparer l'ancienne méthode de calcul.
 
-Elle doit donc être lue comme une aide au ciblage exploratoire, pas comme une
-estimation démographique départementale robuste.
+### Indicateur de population scolarisée
+
+Le tableau ajoute séparément :
+
+```text
+population scolarisee 18-29 ans =
+    population scolarisee 18-24 ans
+    + population scolarisee 25-29 ans
+```
+
+La part correspondante est calculée sur l'ensemble des 18-29 ans du
+département. Cet indicateur peut aider à identifier les territoires
+universitaires, mais il ne doit pas être interprété comme un nombre d'étudiants
+mal inscrits.
 
 ### Carte NUPES de style Insee
 
@@ -406,6 +474,34 @@ plus de 28,7 %
 
 Les seuils sont affichés directement dans la légende de la carte et sont
 recalculés sur les 100 territoires disposant d'un pourcentage cohérent.
+
+### Nuage de points et corrélation
+
+Le nuage de points place chaque département selon :
+
+```text
+axe x = part du vote NUPES parmi les exprimés
+axe y = part de mal-inscription
+couleur = score croisé par moyenne géométrique des rangs
+```
+
+Il affiche aussi la droite de régression, les médianes et deux coefficients :
+
+```text
+Pearson  = 0,199
+Spearman = 0,321
+```
+
+La relation observée est positive mais limitée. Elle est plus nette dans les
+rangs que sous la forme d'une relation linéaire. Comme le reste de l'analyse,
+elle est écologique : une corrélation entre départements ne décrit pas le
+comportement individuel des personnes mal inscrites.
+
+Le graphique est généré par :
+
+```bash
+python3 src/scripts/cartographie/nuage_points_mal_inscrits_nupes_2022.py
+```
 
 ## Premier et second tours
 
@@ -453,6 +549,53 @@ Le script :
 4. joint les résultats au fond départemental ;
 5. calcule les scores et couleurs ;
 6. génère les GeoJSON et les cartes HTML interactives.
+
+### Reproduire le tableau Top 25
+
+Le générateur du tableau est :
+
+```text
+src/scripts/cartographie/construire_tableau_top25_mal_inscrits_nupes_2022.py
+```
+
+Pour retélécharger les données RP2022 des 25 départements et reconstruire le
+CSV intermédiaire puis le Markdown :
+
+```bash
+python src/scripts/cartographie/construire_tableau_top25_mal_inscrits_nupes_2022.py \
+  --refresh-insee
+```
+
+Sans `--refresh-insee`, le script réutilise le CSV local déjà versionné.
+
+### Reproduire les overrides Wikipédia
+
+Le fichier
+`data/04_analysis/elections/2022-legislatives-nupes-wikipedia-overrides.csv`
+est produit par :
+
+```text
+src/scripts/cartographie/extraire_nupes_wikipedia_2022.py
+```
+
+Commande :
+
+```bash
+python src/scripts/cartographie/extraire_nupes_wikipedia_2022.py
+```
+
+Le script :
+
+1. part de la liste départementale Insee ;
+2. retrouve les pages Wikipédia départementales ;
+3. interroge l'API MediaWiki par lots ;
+4. extrait l'entrée officielle NUPES de l'infobox ;
+5. accepte les variantes de champ `votesN` et `vote électoralN` ;
+6. exclut les entrées explicitement dissidentes lorsque l'entrée officielle
+   est identifiée par son logo ou sa couleur ;
+7. écrit les voix, le pourcentage, l'URL permanente, l'identifiant et
+   l'horodatage de la révision ;
+8. génère un CSV de contrôle pour les pages non extraites.
 
 ## Limites et pistes de prolongement
 

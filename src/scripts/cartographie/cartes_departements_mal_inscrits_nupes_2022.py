@@ -60,6 +60,8 @@ MAPS = {
     / "maps/2022-vote-nupes-departements-coalition-style-insee.html",
     "cross_coalition": ROOT
     / "maps/2022-croisement-mal-inscrits-nupes-departements-coalition.html",
+    "cross_coalition_web": ROOT
+    / "maps/2022-croisement-mal-inscrits-nupes-departements-coalition-web.html",
     "cross_t1_ministry": ROOT
     / "maps/2022-croisement-mal-inscrits-nupes-departements-t1-ministere-legis2022.html",
     "cross_t2": ROOT
@@ -198,7 +200,7 @@ def extract_mal_inscription():
             continue
         rows.append(
             {
-                "code_departement": str(code).strip(),
+                "code_departement": code_departement(code),
                 "libelle_departement": str(name).strip(),
                 "part_mal_inscrits": f"{float(part_other_commune) / 100:.6f}",
                 "part_inscrits_commune_residence": f"{float(part_same_commune) / 100:.6f}",
@@ -213,64 +215,93 @@ def extract_mal_inscription():
     return {row["code_departement"]: row for row in rows}
 
 
-def aggregate_nupes_t1(
-    use_overrides=True,
-    output_csv=NUPES_CSV,
-    qa_totals=QA_TOTALS,
-    qa_scope="France entière source ministère T1",
-    qa_method="calcul candidats + totaux de coalition Wikipédia quand disponibles",
-):
-    nupes_candidate_keys = load_nupes_candidate_keys()
-    wikipedia_overrides = load_wikipedia_overrides() if use_overrides else {}
+CANDIDATE_HEADERS = {
+    "N°Panneau",
+    "Sexe",
+    "Nom",
+    "Prénom",
+    "Nuance",
+    "Voix",
+    "% Voix/Ins",
+    "% Voix/Exp",
+}
+
+
+def election_layout(headers):
+    normalized = [header.rstrip(" 0123456789") for header in headers]
+    repeated_names = []
+    for header in normalized:
+        if header in CANDIDATE_HEADERS and header not in repeated_names:
+            repeated_names.append(header)
+    first_candidate_idx = min(
+        index for index, header in enumerate(normalized) if header in CANDIDATE_HEADERS
+    )
+    return {
+        "departement_idx": normalized.index("Code du département"),
+        "libelle_departement_idx": normalized.index("Libellé du département"),
+        "circonscription_idx": normalized.index("Code de la circonscription"),
+        "bureau_identity_indices": [
+            normalized.index("Code de la circonscription"),
+            normalized.index("Code de la commune"),
+            normalized.index("Code du b.vote"),
+        ],
+        "inscrits_idx": normalized.index("Inscrits"),
+        "votants_idx": normalized.index("Votants"),
+        "blancs_idx": normalized.index("Blancs"),
+        "nuls_idx": normalized.index("Nuls"),
+        "exprimes_idx": normalized.index("Exprimés"),
+        "first_candidate_idx": first_candidate_idx,
+        "block_width": len(repeated_names),
+        "panneau_offset": repeated_names.index("N°Panneau"),
+        "nuance_offset": repeated_names.index("Nuance"),
+        "voix_offset": repeated_names.index("Voix"),
+    }
+
+
+def candidate_blocks(line, layout):
+    first = layout["first_candidate_idx"]
+    width = layout["block_width"]
+    for offset in range(first, len(line), width):
+        if offset + width > len(line):
+            continue
+        yield {
+            "panneau": line[offset + layout["panneau_offset"]].strip(),
+            "nuance": line[offset + layout["nuance_offset"]].strip(),
+            "voix": line[offset + layout["voix_offset"]].strip(),
+        }
+
+
+def aggregate_candidate_votes(source_path, turn, nupes_candidate_keys):
     totals = {}
-
-    with LEGIS_T1.open("r", encoding="cp1252", newline="") as stream:
+    seen_bureaux_by_dep = {}
+    with source_path.open("r", encoding="cp1252", newline="") as stream:
         reader = csv.reader(stream, delimiter=";")
-        headers = next(reader)
-        normalized = [header.rstrip(" 0123456789") for header in headers]
-
-        departement_idx = normalized.index("Code du département")
-        libelle_departement_idx = normalized.index("Libellé du département")
-        circonscription_idx = normalized.index("Code de la circonscription")
-        inscrits_idx = normalized.index("Inscrits")
-        votants_idx = normalized.index("Votants")
-        blancs_idx = normalized.index("Blancs")
-        nuls_idx = normalized.index("Nuls")
-        exprimes_idx = normalized.index("Exprimés")
-        first_candidate_idx = min(
-            index
-            for index, header in enumerate(normalized)
-            if header in {"N°Panneau", "Sexe", "Nom", "Prénom", "Nuance", "Voix"}
-        )
-        repeated_names = []
-        for header in normalized:
-            if header in {
-                "N°Panneau",
-                "Sexe",
-                "Nom",
-                "Prénom",
-                "Nuance",
-                "Voix",
-                "% Voix/Ins",
-                "% Voix/Exp",
-            } and header not in repeated_names:
-                repeated_names.append(header)
-
-        nuance_offset = repeated_names.index("Nuance")
-        voix_offset = repeated_names.index("Voix")
-        block_width = len(repeated_names)
-
-        seen_bureaux = set()
+        layout = election_layout(next(reader))
         for line in reader:
-            dep = code_departement(line[departement_idx])
+            dep = code_departement(line[layout["departement_idx"]])
+            seen_bureaux = seen_bureaux_by_dep.setdefault(dep, set())
+            bureau_key = tuple(
+                line[index].strip()
+                for index in layout["bureau_identity_indices"]
+            )
+            if bureau_key in seen_bureaux:
+                continue
+            seen_bureaux.add(bureau_key)
+
             bucket = totals.setdefault(
                 dep,
                 {
                     "code_departement": dep,
-                    "libelle_departement": line[libelle_departement_idx],
-                    "methode_nupes": "calcul_candidats",
-                    "source_nupes": "Ministère de l'Intérieur T1 + Legis-2022",
-                    "source_exprimes": "Ministère de l'Intérieur T1",
+                    "libelle_departement": line[
+                        layout["libelle_departement_idx"]
+                    ],
+                    "methode_nupes": (
+                        "calcul_candidats" if turn == 1 else "calcul_candidats_t2"
+                    ),
+                    "source_nupes": (
+                        f"Ministère de l'Intérieur T{turn} + Legis-2022"
+                    ),
+                    "source_exprimes": f"Ministère de l'Intérieur T{turn}",
                     "bureaux": 0,
                     "inscrits": 0,
                     "votants": 0,
@@ -281,37 +312,91 @@ def aggregate_nupes_t1(
                     "bureaux_avec_nupes": 0,
                 },
             )
-
-            # Each source line is one bureau. The guard protects against accidental
-            # duplicate source rows without depending on commune fields.
-            bureau_key = tuple(line[:first_candidate_idx])
-            if bureau_key not in seen_bureaux:
-                seen_bureaux.add(bureau_key)
-                bucket["bureaux"] += 1
-                bucket["inscrits"] += to_int(line[inscrits_idx])
-                bucket["votants"] += to_int(line[votants_idx])
-                bucket["blancs"] += to_int(line[blancs_idx])
-                bucket["nuls"] += to_int(line[nuls_idx])
-                bucket["exprimes"] += to_int(line[exprimes_idx])
+            bucket["bureaux"] += 1
+            for field in ["inscrits", "votants", "blancs", "nuls", "exprimes"]:
+                bucket[field] += to_int(line[layout[f"{field}_idx"]])
 
             has_nupes = False
-            for offset in range(first_candidate_idx, len(line), block_width):
-                if offset + voix_offset >= len(line) or not line[offset + voix_offset]:
-                    break
+            circonscription = normalize_circonscription(
+                line[layout["circonscription_idx"]]
+            )
+            for candidate in candidate_blocks(line, layout):
+                if not candidate["panneau"] or not candidate["voix"]:
+                    continue
                 candidate_key = (
                     dep,
-                    normalize_circonscription(line[circonscription_idx]),
-                    to_int(line[offset]),
+                    circonscription,
+                    to_int(candidate["panneau"]),
                 )
                 if (
-                    line[offset + nuance_offset] == "NUP"
+                    candidate["nuance"] == "NUP"
                     or candidate_key in nupes_candidate_keys
                 ):
-                    bucket["voix_nupes"] += to_int(line[offset + voix_offset])
+                    bucket["voix_nupes"] += to_int(candidate["voix"])
                     has_nupes = True
             if has_nupes:
                 bucket["bureaux_avec_nupes"] += 1
+    return totals
 
+
+def write_election_outputs(
+    rows,
+    output_csv,
+    qa_totals,
+    qa_scope,
+    qa_method,
+    calculate_national_rate=True,
+):
+    with output_csv.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    national = {
+        "bureaux": sum(row["bureaux"] for row in rows),
+        "inscrits": sum(row["inscrits"] for row in rows),
+        "exprimes": sum(row["exprimes"] for row in rows),
+        "voix_nupes": sum(row["voix_nupes"] for row in rows),
+    }
+    with qa_totals.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=[
+                "scope",
+                "bureaux",
+                "inscrits",
+                "exprimes",
+                "voix_nupes",
+                "part_nupes_exprimes",
+                "methode",
+            ],
+        )
+        writer.writeheader()
+        writer.writerow(
+            {
+                "scope": qa_scope,
+                **national,
+                "part_nupes_exprimes": (
+                    f"{national['voix_nupes'] / national['exprimes']:.6f}"
+                    if national["exprimes"] and calculate_national_rate
+                    else ""
+                ),
+                "methode": qa_method,
+            }
+        )
+
+
+def aggregate_nupes_t1(
+    use_overrides=True,
+    output_csv=NUPES_CSV,
+    qa_totals=QA_TOTALS,
+    qa_scope="France entière source ministère T1",
+    qa_method="calcul candidats + totaux de coalition Wikipédia quand disponibles",
+):
+    totals = aggregate_candidate_votes(
+        LEGIS_T1, 1, load_nupes_candidate_keys()
+    )
+    wikipedia_overrides = load_wikipedia_overrides() if use_overrides else {}
     rows = []
     for dep, row in sorted(totals.items()):
         if dep in wikipedia_overrides:
@@ -330,9 +415,7 @@ def aggregate_nupes_t1(
             row["part_nupes_exprimes_source"] = None
             row["methode_nupes"] = "total_coalition_officiel_corse"
             row["source_nupes"] = "Totaux officiels de coalition Corse"
-        row.setdefault("source_nupes", "Ministère de l'Intérieur T1 + Legis-2022")
-        exprimes = row["exprimes"]
-        inscrits = row["inscrits"]
+
         source_part = row.get("part_nupes_exprimes_source")
         if use_overrides and row["methode_nupes"] != "calcul_candidats":
             part_nupes_exprimes = source_part
@@ -343,208 +426,75 @@ def aggregate_nupes_t1(
                 else "indisponible_sans_denominateur_coherent"
             )
         else:
-            part_nupes_exprimes = row["voix_nupes"] / exprimes if exprimes else None
-            part_nupes_inscrits = row["voix_nupes"] / inscrits if inscrits else None
+            part_nupes_exprimes = (
+                row["voix_nupes"] / row["exprimes"] if row["exprimes"] else None
+            )
+            part_nupes_inscrits = (
+                row["voix_nupes"] / row["inscrits"] if row["inscrits"] else None
+            )
             methode_part = "ratio_ministere"
         rows.append(
             {
                 **row,
-                "part_nupes_exprimes": f"{part_nupes_exprimes:.6f}"
-                if part_nupes_exprimes is not None
-                else "",
-                "part_nupes_inscrits": f"{part_nupes_inscrits:.6f}"
-                if part_nupes_inscrits is not None
-                else "",
+                "part_nupes_exprimes": (
+                    f"{part_nupes_exprimes:.6f}"
+                    if part_nupes_exprimes is not None
+                    else ""
+                ),
+                "part_nupes_inscrits": (
+                    f"{part_nupes_inscrits:.6f}"
+                    if part_nupes_inscrits is not None
+                    else ""
+                ),
                 "methode_part_nupes_exprimes": methode_part,
             }
         )
 
-    with output_csv.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
-
-    with qa_totals.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(
-            stream,
-            fieldnames=[
-                "scope",
-                "bureaux",
-                "inscrits",
-                "exprimes",
-                "voix_nupes",
-                "part_nupes_exprimes",
-                "methode",
-            ],
+    if use_overrides:
+        qa_method += (
+            " ; taux national non calculé car les pourcentages de coalition "
+            "proviennent de sources départementales distinctes"
         )
-        writer.writeheader()
-        national = {
-            "bureaux": sum(row["bureaux"] for row in rows),
-            "inscrits": sum(row["inscrits"] for row in rows),
-            "exprimes": sum(row["exprimes"] for row in rows),
-            "voix_nupes": sum(row["voix_nupes"] for row in rows),
-        }
-        writer.writerow(
-            {
-                "scope": qa_scope,
-                **national,
-                "part_nupes_exprimes": ""
-                if use_overrides
-                else f"{national['voix_nupes'] / national['exprimes']:.6f}",
-                "methode": qa_method
-                + (
-                    " ; taux national non calculé car les pourcentages de coalition "
-                    "proviennent de sources départementales distinctes"
-                    if use_overrides
-                    else ""
-                ),
-            }
-        )
-
+    write_election_outputs(
+        rows,
+        output_csv,
+        qa_totals,
+        qa_scope,
+        qa_method,
+        calculate_national_rate=not use_overrides,
+    )
     return {row["code_departement"]: row for row in rows}
 
 
 def aggregate_nupes_t2():
-    nupes_candidate_keys = load_nupes_candidate_keys()
-    totals = {}
-
-    with LEGIS_T2.open("r", encoding="cp1252", newline="") as stream:
-        reader = csv.reader(stream, delimiter=";")
-        headers = next(reader)
-        normalized = [header.rstrip(" 0123456789") for header in headers]
-
-        departement_idx = normalized.index("Code du département")
-        libelle_departement_idx = normalized.index("Libellé du département")
-        circonscription_idx = normalized.index("Code de la circonscription")
-        inscrits_idx = normalized.index("Inscrits")
-        votants_idx = normalized.index("Votants")
-        blancs_idx = normalized.index("Blancs")
-        nuls_idx = normalized.index("Nuls")
-        exprimes_idx = normalized.index("Exprimés")
-        first_candidate_idx = min(
-            index
-            for index, header in enumerate(normalized)
-            if header in {"N°Panneau", "Sexe", "Nom", "Prénom", "Nuance", "Voix"}
-        )
-        repeated_names = []
-        for header in normalized:
-            if header in {
-                "N°Panneau",
-                "Sexe",
-                "Nom",
-                "Prénom",
-                "Nuance",
-                "Voix",
-                "% Voix/Ins",
-                "% Voix/Exp",
-            } and header not in repeated_names:
-                repeated_names.append(header)
-
-        nuance_offset = repeated_names.index("Nuance")
-        voix_offset = repeated_names.index("Voix")
-        block_width = len(repeated_names)
-
-        seen_bureaux = set()
-        for line in reader:
-            dep = code_departement(line[departement_idx])
-            bucket = totals.setdefault(
-                dep,
-                {
-                    "code_departement": dep,
-                    "libelle_departement": line[libelle_departement_idx],
-                    "methode_nupes": "calcul_candidats_t2",
-                    "source_nupes": "Ministère de l'Intérieur T2 + Legis-2022",
-                    "source_exprimes": "Ministère de l'Intérieur T2",
-                    "bureaux": 0,
-                    "inscrits": 0,
-                    "votants": 0,
-                    "blancs": 0,
-                    "nuls": 0,
-                    "exprimes": 0,
-                    "voix_nupes": 0,
-                    "bureaux_avec_nupes": 0,
-                },
-            )
-
-            bureau_key = tuple(line[:first_candidate_idx])
-            if bureau_key not in seen_bureaux:
-                seen_bureaux.add(bureau_key)
-                bucket["bureaux"] += 1
-                bucket["inscrits"] += to_int(line[inscrits_idx])
-                bucket["votants"] += to_int(line[votants_idx])
-                bucket["blancs"] += to_int(line[blancs_idx])
-                bucket["nuls"] += to_int(line[nuls_idx])
-                bucket["exprimes"] += to_int(line[exprimes_idx])
-
-            has_nupes = False
-            for offset in range(first_candidate_idx, len(line), block_width):
-                if offset + voix_offset >= len(line) or not line[offset + voix_offset]:
-                    break
-                candidate_key = (
-                    dep,
-                    normalize_circonscription(line[circonscription_idx]),
-                    to_int(line[offset]),
-                )
-                if (
-                    line[offset + nuance_offset] == "NUP"
-                    or candidate_key in nupes_candidate_keys
-                ):
-                    bucket["voix_nupes"] += to_int(line[offset + voix_offset])
-                    has_nupes = True
-            if has_nupes:
-                bucket["bureaux_avec_nupes"] += 1
-
+    totals = aggregate_candidate_votes(
+        LEGIS_T2, 2, load_nupes_candidate_keys()
+    )
     rows = []
     for _, row in sorted(totals.items()):
-        exprimes = row["exprimes"]
-        inscrits = row["inscrits"]
         rows.append(
             {
                 **row,
-                "part_nupes_exprimes": f"{row['voix_nupes'] / exprimes:.6f}"
-                if exprimes
-                else "",
-                "part_nupes_inscrits": f"{row['voix_nupes'] / inscrits:.6f}"
-                if inscrits
-                else "",
+                "part_nupes_exprimes": (
+                    f"{row['voix_nupes'] / row['exprimes']:.6f}"
+                    if row["exprimes"]
+                    else ""
+                ),
+                "part_nupes_inscrits": (
+                    f"{row['voix_nupes'] / row['inscrits']:.6f}"
+                    if row["inscrits"]
+                    else ""
+                ),
                 "methode_part_nupes_exprimes": "ratio_ministere",
             }
         )
-
-    with NUPES_T2_CSV.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
-
-    with QA_TOTALS_T2.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(
-            stream,
-            fieldnames=[
-                "scope",
-                "bureaux",
-                "inscrits",
-                "exprimes",
-                "voix_nupes",
-                "part_nupes_exprimes",
-                "methode",
-            ],
-        )
-        writer.writeheader()
-        national = {
-            "bureaux": sum(row["bureaux"] for row in rows),
-            "inscrits": sum(row["inscrits"] for row in rows),
-            "exprimes": sum(row["exprimes"] for row in rows),
-            "voix_nupes": sum(row["voix_nupes"] for row in rows),
-        }
-        writer.writerow(
-            {
-                "scope": "France entière source ministère T2",
-                **national,
-                "part_nupes_exprimes": f"{national['voix_nupes'] / national['exprimes']:.6f}",
-                "methode": "calcul candidat par candidat sur les circonscriptions avec second tour",
-            }
-        )
-
+    write_election_outputs(
+        rows,
+        NUPES_T2_CSV,
+        QA_TOTALS_T2,
+        "France entière source ministère T2",
+        "calcul candidat par candidat sur les circonscriptions avec second tour",
+    )
     return {row["code_departement"]: row for row in rows}
 
 
@@ -790,6 +740,66 @@ def format_percent(value):
     return f"{value * 100:.1f} %"
 
 
+def point_line_distance(point, start, end):
+    if start == end:
+        return math.dist(point, start)
+    dx = end[0] - start[0]
+    dy = end[1] - start[1]
+    projection = (
+        (point[0] - start[0]) * dx + (point[1] - start[1]) * dy
+    ) / (dx * dx + dy * dy)
+    projection = max(0, min(1, projection))
+    nearest = (start[0] + projection * dx, start[1] + projection * dy)
+    return math.dist(point, nearest)
+
+
+def simplify_line(points, tolerance):
+    if len(points) <= 2:
+        return points
+    start, end = points[0], points[-1]
+    distances = [
+        point_line_distance(point, start, end) for point in points[1:-1]
+    ]
+    max_distance = max(distances, default=0)
+    if max_distance <= tolerance:
+        return [start, end]
+    split = distances.index(max_distance) + 1
+    return (
+        simplify_line(points[: split + 1], tolerance)[:-1]
+        + simplify_line(points[split:], tolerance)
+    )
+
+
+def simplify_ring(ring, tolerance):
+    if len(ring) < 5:
+        return ring
+    open_ring = ring[:-1] if ring[0] == ring[-1] else ring
+    simplified = simplify_line(open_ring, tolerance)
+    if len(simplified) < 3:
+        return ring
+    return simplified + [simplified[0]]
+
+
+def simplified_geojson(geojson, tolerance=0.01):
+    result = json.loads(json.dumps(geojson))
+    for feature in result["features"]:
+        geometry = feature["geometry"]
+        if geometry["type"] == "Polygon":
+            geometry["coordinates"] = [
+                simplify_ring(ring, tolerance)
+                for ring in geometry["coordinates"]
+            ]
+        elif geometry["type"] == "MultiPolygon":
+            geometry["coordinates"] = [
+                [
+                    simplify_ring(ring, tolerance)
+                    for ring in polygon
+                ]
+                for polygon in geometry["coordinates"]
+            ]
+    return result
+
+
 def nupes_insee_style_legend_html(geojson):
     colors = ["#f8dbe0", "#f3aebd", "#b90f3e", "#68120d"]
     labels = []
@@ -832,6 +842,7 @@ def map_html(geojson, mode, title, subtitle, variable_label, source_note):
         if mode == "nupes_insee_style"
         else ""
     )
+    class_legend_block = f"      {class_legend}\n" if class_legend else ""
 
     return f"""<!doctype html>
 <html lang="fr">
@@ -969,7 +980,7 @@ def map_html(geojson, mode, title, subtitle, variable_label, source_note):
       <h2 id="dept-title">Survolez un département</h2>
       <div class="legend-bar {html.escape(mode)}"></div>
       <p>{html.escape(legend)}</p>
-      {class_legend}
+{class_legend_block}
       <div class="metric"><strong>Variable cartographiée</strong>{html.escape(variable_label)}</div>
       <div id="details" class="metric"></div>
       <p class="note">{html.escape(source_note)}</p>
@@ -1130,6 +1141,18 @@ def write_maps(geojson, geojson_t1_ministry, geojson_t2):
             "Rouge : faible sur au moins une dimension. Vert : élevé simultanément sur les deux dimensions.",
             "Moyenne géométrique des rangs de mal-inscription et de vote NUPES",
             source_note,
+        ),
+        encoding="utf-8",
+    )
+    MAPS["cross_coalition_web"].write_text(
+        map_html(
+            simplified_geojson(geojson),
+            "cross",
+            "Croisement mal-inscription x vote NUPES en 2022 - coalition contrôlée",
+            "Rouge : faible sur au moins une dimension. Vert : élevé simultanément sur les deux dimensions.",
+            "Moyenne géométrique des rangs de mal-inscription et de vote NUPES",
+            source_note
+            + " Version web : contours géographiques simplifiés, données inchangées.",
         ),
         encoding="utf-8",
     )
