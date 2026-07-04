@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mal-inscription et vote NUPES en 2022 - bulles sans outliers</title>
+  <style>
+    :root { color-scheme:light; --ink:#1f2529; --muted:#667078; --line:#d9dddf; --paper:#fff; --wash:#f5f6f3; --accent:#194f70; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--wash); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header { padding:18px 24px 14px; background:var(--paper); border-bottom:1px solid var(--line); }
+    h1 { margin:0; max-width:1120px; font-size:23px; line-height:1.2; letter-spacing:0; }
+    header p { margin:7px 0 0; color:var(--muted); font-size:14px; }
+    main { display:grid; grid-template-columns:minmax(0,1fr) 340px; min-height:calc(100vh - 92px); }
+    .plot-wrap { min-width:0; padding:18px 12px 12px 18px; }
+    .toolbar { min-height:38px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding:0 8px 10px; color:#434b50; font-size:13px; }
+    .toolbar label { display:inline-flex; align-items:center; gap:7px; cursor:pointer; }
+    input { accent-color:var(--accent); }
+    #chart { display:block; width:100%; height:min(760px,calc(100vh - 158px)); min-height:520px; background:var(--paper); border:1px solid var(--line); }
+    aside { padding:20px; background:var(--paper); border-left:1px solid var(--line); }
+    aside h2 { margin:0 0 12px; font-size:17px; letter-spacing:0; }
+    .metric { padding:12px 0; border-top:1px solid #eceeef; }
+    .metric strong { display:block; margin-bottom:3px; font-size:24px; color:var(--accent); }
+    .metric span,.note { color:var(--muted); font-size:13px; line-height:1.45; }
+    #selection { margin:18px 0; padding:14px; border:1px solid var(--line); border-radius:6px; background:#fafafa; min-height:150px; }
+    #selection strong { display:block; margin-bottom:8px; font-size:16px; }
+    #selection div { margin:4px 0; font-size:13px; }
+    .legend { margin:16px 0; }
+    .legend-bar { height:14px; border:1px solid #c9cdca; background:linear-gradient(90deg,#b2182b,#f7f7d4 50%,#1a9850); }
+    .legend-labels { display:flex; justify-content:space-between; margin-top:5px; color:var(--muted); font-size:11px; }
+    #size-legend svg { width:100%; height:92px; display:block; }
+    .grid { stroke:#e7e9e9; stroke-width:1; }
+    .axis { stroke:#7f888d; stroke-width:1.2; }
+    .median { stroke:#8c969b; stroke-width:1; stroke-dasharray:5 5; }
+    .regression { stroke:#174f70; stroke-width:2.2; }
+    .tick-label,.axis-label { fill:#59636a; font-size:12px; }
+    .axis-label { font-size:13px; font-weight:600; }
+    .point { stroke:#fff; stroke-width:1.3; cursor:pointer; fill-opacity:.82; transition:opacity 120ms ease; }
+    .point:hover,.point.selected { stroke:#111; stroke-width:2.2; fill-opacity:.95; }
+    .point-label { fill:#30383d; font-size:10px; font-weight:700; pointer-events:none; paint-order:stroke; stroke:#fff; stroke-width:3px; stroke-linejoin:round; }
+    #tooltip { position:fixed; z-index:10; display:none; pointer-events:none; padding:8px 10px; border:1px solid #bcc2c5; border-radius:4px; background:rgba(255,255,255,.97); box-shadow:0 4px 16px rgba(0,0,0,.12); font-size:12px; line-height:1.4; }
+    @media (max-width:900px) { main { grid-template-columns:1fr; } aside { border-left:0; border-top:1px solid var(--line); } #chart { height:580px; min-height:480px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mal-inscription et vote NUPES en 2022 - bulles sans outliers</h1>
+    <p>Un point par département · couleur : score croisé · surface : mal-inscrits estimés</p>
+  </header>
+  <main>
+    <section class="plot-wrap">
+      <div class="toolbar">
+        <label><input id="labels" type="checkbox"> Afficher tous les codes</label>
+        <label><input id="regression" type="checkbox" checked> Droite de régression</label>
+        <label><input id="medians" type="checkbox" checked> Médianes</label>
+      </div>
+      <svg id="chart" role="img" aria-label="Nuage de points des départements"></svg>
+    </section>
+    <aside>
+      <h2>Relation statistique</h2>
+      <div class="metric"><strong>0.443</strong><span>Corrélation de Pearson, hors outliers.</span></div>
+      <div class="metric"><strong>0.370</strong><span>Corrélation de Spearman, hors outliers.</span></div>
+      <div id="selection"><strong>Sélection</strong><div>Cliquez sur un département.</div></div>
+      <div class="legend"><div class="legend-bar"></div><div class="legend-labels"><span>Score croisé faible</span><span>élevé</span></div></div>
+      <div class="metric" id="size-legend"><strong>Surface des bulles</strong><span>Nombre estimé de mal-inscrits.</span></div>
+      <p class="note">Version sans outliers : exclusion par règle IQR 1,5 sur les deux axes. Départements exclus : Corse-du-Sud (2A, vote 9.5 %, mal-inscrits 22.9 %), Haute-Corse (2B, vote 8.5 %, mal-inscrits 26.4 %), Paris (75, vote 37.7 %, mal-inscrits 23.6 %), Seine-Saint-Denis (93, vote 46.0 %, mal-inscrits 18.0 %), Guadeloupe (971, vote 33.4 %, mal-inscrits 23.6 %), Guyane (973, vote 22.5 %, mal-inscrits 26.5 %).</p>
+      <p class="note">Sources : Insee Première n°1986, figure 4 ; résultats NUPES législatives 2022. Volume : part Insee de mal-inscrits × inscrits législatives 2022.</p>
+    </aside>
+  </main>
+  <div id="tooltip"></div>
+  <script>
+    const data = [{"code":"01","nom":"Ain","nupes":22.52,"mal":14.7,"score":0.3226,"couleur":"#dfab7c","mal_inscrits_estimes":64782.458999999995,"voix_nupes":46671,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Ain","x":22.52,"voix":46671,"etiquette":false},{"code":"02","nom":"Aisne","nupes":24.08,"mal":13.600000000000001,"score":0.256534,"couleur":"#d68d6b","mal_inscrits_estimes":50904.39200000001,"voix_nupes":40464,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Aisne","x":24.08,"voix":40464,"etiquette":false},{"code":"03","nom":"Allier","nupes":24.23,"mal":13.200000000000001,"score":0.211881,"couleur":"#d07860","mal_inscrits_estimes":33066.924,"voix_nupes":30034,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Allier","x":24.23,"voix":30034,"etiquette":false},{"code":"04","nom":"Alpes-de-Haute-Provence","nupes":28.67,"mal":14.799999999999999,"score":0.521353,"couleur":"#e9f1a0","mal_inscrits_estimes":19036.203999999998,"voix_nupes":18684,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Alpes-de-Haute-Provence","x":28.67,"voix":18684,"etiquette":false},{"code":"05","nom":"Hautes-Alpes","nupes":28.73,"mal":15.299999999999999,"score":0.586816,"couleur":"#cbe495","mal_inscrits_estimes":17429.301,"voix_nupes":16927,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Hautes-Alpes","x":28.73,"voix":16927,"etiquette":false},{"code":"06","nom":"Alpes-Maritimes","nupes":16.72,"mal":15.6,"score":0.159711,"couleur":"#c86153","mal_inscrits_estimes":122179.98,"voix_nupes":58127,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Alpes-Maritimes","x":16.72,"voix":58127,"etiquette":false},{"code":"07","nom":"Ardèche","nupes":28.93,"mal":15.1,"score":0.556931,"couleur":"#d9ea9a","mal_inscrits_estimes":38760.039,"voix_nupes":38881,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Ardèche","x":28.93,"voix":38881,"etiquette":false},{"code":"08","nom":"Ardennes","nupes":17.52,"mal":10.8,"score":0.0,"couleur":"#b2182b","mal_inscrits_estimes":20188.548,"voix_nupes":14752,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Ardennes","x":17.52,"voix":14752,"etiquette":false},{"code":"09","nom":"Ariège","nupes":31.05,"mal":18.4,"score":0.858586,"couleur":"#51af65","mal_inscrits_estimes":21984.688,"voix_nupes":19771,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Ariège","x":31.05,"voix":19771,"etiquette":true},{"code":"10","nom":"Aube","nupes":17.46,"mal":17.5,"score":0.236027,"couleur":"#d38366","mal_inscrits_estimes":36109.85,"voix_nupes":17153,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Aube","x":17.46,"voix":17153,"etiquette":false},{"code":"11","nom":"Aude","nupes":25.09,"mal":13.8,"score":0.336986,"couleur":"#e1b180","mal_inscrits_estimes":38761.716,"voix_nupes":35371,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Aude","x":25.09,"voix":35371,"etiquette":false},{"code":"12","nom":"Aveyron","nupes":25.369999999999997,"mal":16.0,"score":0.575669,"couleur":"#d0e697","mal_inscrits_estimes":35168.32,"voix_nupes":29951,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Aveyron","x":25.369999999999997,"voix":29951,"etiquette":false},{"code":"13","nom":"Bouches-du-Rhône","nupes":26.240000000000002,"mal":20.1,"score":0.764814,"couleur":"#7bc276","mal_inscrits_estimes":285373.368,"voix_nupes":161290,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Bouches-du-Rhône","x":26.240000000000002,"voix":161290,"etiquette":false},{"code":"14","nom":"Calvados","nupes":27.36,"mal":16.400000000000002,"score":0.665978,"couleur":"#a8d587","mal_inscrits_estimes":84434.58,"voix_nupes":70729,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Calvados","x":27.36,"voix":70729,"etiquette":false},{"code":"15","nom":"Cantal","nupes":17.51,"mal":14.499999999999998,"score":0.153854,"couleur":"#c85e52","mal_inscrits_estimes":16816.954999999998,"voix_nupes":10638,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Cantal","x":17.51,"voix":10638,"etiquette":false},{"code":"16","nom":"Charente","nupes":22.39,"mal":17.599999999999998,"score":0.466509,"couleur":"#f4eca0","mal_inscrits_estimes":45473.824,"voix_nupes":28247,"source_nupes":"Wikipédia - Élections législatives de 2022 en Charente","x":22.39,"voix":28247,"etiquette":false},{"code":"17","nom":"Charente-Maritime","nupes":22.41,"mal":15.7,"score":0.389118,"couleur":"#e9c98d","mal_inscrits_estimes":81788.208,"voix_nupes":57489,"source_nupes":"Wikipédia - Élections législatives de 2022 en Charente-Maritime","x":22.41,"voix":57489,"etiquette":false},{"code":"18","nom":"Cher","nupes":25.72,"mal":15.0,"score":0.47828,"couleur":"#f5f2a3","mal_inscrits_estimes":33682.95,"voix_nupes":27571,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Cher","x":25.72,"voix":27571,"etiquette":false},{"code":"19","nom":"Corrèze","nupes":23.36,"mal":14.799999999999999,"score":0.378754,"couleur":"#e7c48a","mal_inscrits_estimes":27464.212,"voix_nupes":23510,"source_nupes":"Wikipédia - Élections législatives de 2022 en Corrèze","x":23.36,"voix":23510,"etiquette":false},{"code":"21","nom":"Côte-d'Or","nupes":23.31,"mal":17.599999999999998,"score":0.549554,"couleur":"#dceb9c","mal_inscrits_estimes":64855.99999999999,"voix_nupes":43029,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Côte-d'Or","x":23.31,"voix":43029,"etiquette":false},{"code":"22","nom":"Côtes-d'Armor","nupes":25.919999999999998,"mal":12.7,"score":0.207009,"couleur":"#cf765f","mal_inscrits_estimes":60085.859000000004,"voix_nupes":66434,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Côtes-d'Armor","x":25.919999999999998,"voix":66434,"etiquette":false},{"code":"23","nom":"Creuse","nupes":26.369999999999997,"mal":12.9,"score":0.230338,"couleur":"#d28165","mal_inscrits_estimes":11743.515,"voix_nupes":12545,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Creuse","x":26.369999999999997,"voix":12545,"etiquette":false},{"code":"24","nom":"Dordogne","nupes":23.89,"mal":13.5,"score":0.214513,"couleur":"#d07a61","mal_inscrits_estimes":43109.280000000006,"voix_nupes":40783,"source_nupes":"Wikipédia - Élections législatives de 2022 en Dordogne","x":23.89,"voix":40783,"etiquette":false},{"code":"25","nom":"Doubs","nupes":24.37,"mal":16.400000000000002,"score":0.553992,"couleur":"#daeb9b","mal_inscrits_estimes":60699.844000000005,"voix_nupes":43643,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Doubs","x":24.37,"voix":43643,"etiquette":false},{"code":"26","nom":"Drôme","nupes":30.17,"mal":15.299999999999999,"score":0.616575,"couleur":"#bede90","mal_inscrits_estimes":58742.208,"voix_nupes":57637,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Drôme","x":30.17,"voix":57637,"etiquette":false},{"code":"27","nom":"Eure","nupes":21.67,"mal":14.499999999999998,"score":0.271039,"couleur":"#d8936f","mal_inscrits_estimes":62887.95,"voix_nupes":44941,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Eure","x":21.67,"voix":44941,"etiquette":false},{"code":"28","nom":"Eure-et-Loir","nupes":19.3,"mal":15.5,"score":0.242424,"couleur":"#d48668","mal_inscrits_estimes":47251.905,"voix_nupes":27447,"source_nupes":"Wikipédia - Élections législatives de 2022 en Eure-et-Loir","x":19.3,"voix":27447,"etiquette":false},{"code":"29","nom":"Finistère","nupes":30.72,"mal":13.5,"score":0.318783,"couleur":"#dfa97b","mal_inscrits_estimes":96124.05,"voix_nupes":113236,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Finistère","x":30.72,"voix":113236,"etiquette":false},{"code":"30","nom":"Gard","nupes":25.52,"mal":16.1,"score":0.590888,"couleur":"#c9e394","mal_inscrits_estimes":89722.88500000001,"voix_nupes":65610,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Gard","x":25.52,"voix":65610,"etiquette":false},{"code":"31","nom":"Haute-Garonne","nupes":33.85,"mal":20.9,"score":0.929293,"couleur":"#31a259","mal_inscrits_estimes":195985.361,"voix_nupes":166344,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Haute-Garonne","x":33.85,"voix":166344,"etiquette":true},{"code":"32","nom":"Gers","nupes":21.46,"mal":13.900000000000002,"score":0.227217,"couleur":"#d27f64","mal_inscrits_estimes":20524.184,"voix_nupes":17343,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Gers","x":21.46,"voix":17343,"etiquette":false},{"code":"33","nom":"Gironde","nupes":29.99,"mal":19.1,"score":0.847522,"couleur":"#56b267","mal_inscrits_estimes":222552.054,"voix_nupes":173442,"source_nupes":"Wikipédia - Élections législatives de 2022 en Gironde","x":29.99,"voix":173442,"etiquette":true},{"code":"34","nom":"Hérault","nupes":26.33,"mal":19.3,"score":0.762342,"couleur":"#7cc276","mal_inscrits_estimes":164542.922,"voix_nupes":105721,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Hérault","x":26.33,"voix":105721,"etiquette":false},{"code":"35","nom":"Ille-et-Vilaine","nupes":33.129999999999995,"mal":16.900000000000002,"score":0.784374,"couleur":"#72be72","mal_inscrits_estimes":131058.486,"voix_nupes":132936,"source_nupes":"Wikipédia - Élections législatives de 2022 en Ille-et-Vilaine","x":33.129999999999995,"voix":132936,"etiquette":false},{"code":"36","nom":"Indre","nupes":22.25,"mal":12.1,"score":0.051505,"couleur":"#b92f38","mal_inscrits_estimes":20103.060999999998,"voix_nupes":18128,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Indre","x":22.25,"voix":18128,"etiquette":false},{"code":"37","nom":"Indre-et-Loire","nupes":27.139999999999997,"mal":17.4,"score":0.72615,"couleur":"#8cc97d","mal_inscrits_estimes":76938.102,"voix_nupes":59858,"source_nupes":"Wikipédia - Élections législatives de 2022 en Indre-et-Loire","x":27.139999999999997,"voix":59858,"etiquette":false},{"code":"38","nom":"Isère","nupes":30.54,"mal":17.2,"score":0.776136,"couleur":"#76bf74","mal_inscrits_estimes":153040.78399999999,"voix_nupes":132151,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Isère","x":30.54,"voix":132151,"etiquette":false},{"code":"39","nom":"Jura","nupes":25.979999999999997,"mal":13.600000000000001,"score":0.315566,"couleur":"#dea87a","mal_inscrits_estimes":26002.792,"voix_nupes":24983,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Jura","x":25.979999999999997,"voix":24983,"etiquette":false},{"code":"40","nom":"Landes","nupes":31.05,"mal":12.3,"score":0.132474,"couleur":"#c5544c","mal_inscrits_estimes":40715.337,"voix_nupes":53877,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Landes","x":31.05,"voix":53877,"etiquette":false},{"code":"41","nom":"Loir-et-Cher","nupes":20.21,"mal":13.600000000000001,"score":0.176696,"couleur":"#cb6857","mal_inscrits_estimes":33312.792,"voix_nupes":24720,"source_nupes":"Wikipédia - Élections législatives de 2022 en Loir-et-Cher","x":20.21,"voix":24720,"etiquette":false},{"code":"42","nom":"Loire","nupes":22.759999999999998,"mal":15.8,"score":0.426401,"couleur":"#eeda96","mal_inscrits_estimes":81595.15,"voix_nupes":55358,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Loire","x":22.759999999999998,"voix":55358,"etiquette":false},{"code":"43","nom":"Haute-Loire","nupes":19.32,"mal":15.2,"score":0.241581,"couleur":"#d48668","mal_inscrits_estimes":27527.2,"voix_nupes":18099,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Haute-Loire","x":19.32,"voix":18099,"etiquette":false},{"code":"44","nom":"Loire-Atlantique","nupes":34.37,"mal":16.8,"score":0.78956,"couleur":"#70bd71","mal_inscrits_estimes":178236.40800000002,"voix_nupes":182738,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Loire-Atlantique","x":34.37,"voix":182738,"etiquette":false},{"code":"45","nom":"Loiret","nupes":22.97,"mal":18.0,"score":0.537825,"couleur":"#e1ee9e","mal_inscrits_estimes":82695.59999999999,"voix_nupes":50863,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Loiret","x":22.97,"voix":50863,"etiquette":false},{"code":"46","nom":"Lot","nupes":22.96,"mal":16.1,"score":0.456226,"couleur":"#f2e89e","mal_inscrits_estimes":22464.008,"voix_nupes":18590,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Lot","x":22.96,"voix":18590,"etiquette":false},{"code":"47","nom":"Lot-et-Garonne","nupes":25.119999999999997,"mal":14.000000000000002,"score":0.371135,"couleur":"#e6c188","mal_inscrits_estimes":33895.54,"voix_nupes":31066,"source_nupes":"Wikipédia - Élections législatives de 2022 en Lot-et-Garonne","x":25.119999999999997,"voix":31066,"etiquette":false},{"code":"48","nom":"Lozère","nupes":25.41,"mal":18.8,"score":0.707215,"couleur":"#95cd80","mal_inscrits_estimes":11264.02,"voix_nupes":8637,"source_nupes":"Wikipédia - Élections législatives de 2022 en Lozère","x":25.41,"voix":8637,"etiquette":false},{"code":"49","nom":"Maine-et-Loire","nupes":26.950000000000003,"mal":15.6,"score":0.590456,"couleur":"#cae394","mal_inscrits_estimes":92270.1,"voix_nupes":75940,"source_nupes":"Wikipédia - Élections législatives de 2022 en Maine-et-Loire","x":26.950000000000003,"voix":75940,"etiquette":false},{"code":"50","nom":"Manche","nupes":23.16,"mal":13.100000000000001,"score":0.181818,"couleur":"#cc6b59","mal_inscrits_estimes":50403.691,"voix_nupes":43582,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Manche","x":23.16,"voix":43582,"etiquette":false},{"code":"51","nom":"Marne","nupes":18.67,"mal":18.3,"score":0.307044,"couleur":"#dda478","mal_inscrits_estimes":69940.221,"voix_nupes":31885,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Marne","x":18.67,"voix":31885,"etiquette":false},{"code":"52","nom":"Haute-Marne","nupes":14.540000000000001,"mal":14.499999999999998,"score":0.079535,"couleur":"#bd3c3f","mal_inscrits_estimes":18775.469999999998,"voix_nupes":9060,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Haute-Marne","x":14.540000000000001,"voix":9060,"etiquette":false},{"code":"53","nom":"Mayenne","nupes":31.080000000000002,"mal":13.5,"score":0.3397,"couleur":"#e2b380","mal_inscrits_estimes":30404.160000000003,"voix_nupes":33009,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Mayenne","x":31.080000000000002,"voix":33009,"etiquette":false},{"code":"54","nom":"Meurthe-et-Moselle","nupes":30.919999999999998,"mal":19.0,"score":0.863503,"couleur":"#4eaf64","mal_inscrits_estimes":93849.36,"voix_nupes":68436,"source_nupes":"Wikipédia - Élections législatives de 2022 en Meurthe-et-Moselle","x":30.919999999999998,"voix":68436,"etiquette":true},{"code":"55","nom":"Meuse","nupes":16.950000000000003,"mal":12.6,"score":0.055326,"couleur":"#ba3139","mal_inscrits_estimes":17030.16,"voix_nupes":10590,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Meuse","x":16.950000000000003,"voix":10590,"etiquette":false},{"code":"56","nom":"Morbihan","nupes":24.349999999999998,"mal":14.6,"score":0.387542,"couleur":"#e9c88c","mal_inscrits_estimes":89230.52799999999,"voix_nupes":76683,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Morbihan","x":24.349999999999998,"voix":76683,"etiquette":false},{"code":"57","nom":"Moselle","nupes":20.580000000000002,"mal":13.600000000000001,"score":0.196386,"couleur":"#ce715c","mal_inscrits_estimes":101695.49600000001,"voix_nupes":62106,"source_nupes":"Wikipédia - Élections législatives de 2022 en Moselle","x":20.580000000000002,"voix":62106,"etiquette":false},{"code":"58","nom":"Nièvre","nupes":24.98,"mal":14.099999999999998,"score":0.367821,"couleur":"#e6bf87","mal_inscrits_estimes":21773.219999999998,"voix_nupes":18867,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Nièvre","x":24.98,"voix":18867,"etiquette":false},{"code":"59","nom":"Nord","nupes":26.450000000000003,"mal":16.1,"score":0.640917,"couleur":"#b3da8b","mal_inscrits_estimes":293048.98,"voix_nupes":209937,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Nord","x":26.450000000000003,"voix":209937,"etiquette":false},{"code":"60","nom":"Oise","nupes":20.23,"mal":14.6,"score":0.252929,"couleur":"#d68b6b","mal_inscrits_estimes":82583.586,"voix_nupes":52633,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Oise","x":20.23,"voix":52633,"etiquette":false},{"code":"61","nom":"Orne","nupes":19.759999999999998,"mal":13.900000000000002,"score":0.185155,"couleur":"#cc6c59","mal_inscrits_estimes":28600.084000000003,"voix_nupes":19856,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Orne","x":19.759999999999998,"voix":19856,"etiquette":false},{"code":"62","nom":"Pas-de-Calais","nupes":20.07,"mal":13.700000000000001,"score":0.180692,"couleur":"#cb6a58","mal_inscrits_estimes":150154.74000000002,"voix_nupes":99458,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Pas-de-Calais","x":20.07,"voix":99458,"etiquette":false},{"code":"63","nom":"Puy-de-Dôme","nupes":37.519999999999996,"mal":19.6,"score":0.943783,"couleur":"#2a9f56","mal_inscrits_estimes":92104.516,"voix_nupes":88834,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Puy-de-Dôme","x":37.519999999999996,"voix":88834,"etiquette":true},{"code":"64","nom":"Pyrénées-Atlantiques","nupes":24.060000000000002,"mal":18.2,"score":0.596387,"couleur":"#c7e293","mal_inscrits_estimes":94991.806,"voix_nupes":64589,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Pyrénées-Atlantiques","x":24.060000000000002,"voix":64589,"etiquette":false},{"code":"65","nom":"Hautes-Pyrénées","nupes":23.830000000000002,"mal":17.0,"score":0.534495,"couleur":"#e3ee9e","mal_inscrits_estimes":30224.640000000003,"voix_nupes":22044,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Hautes-Pyrénées","x":23.830000000000002,"voix":22044,"etiquette":false},{"code":"66","nom":"Pyrénées-Orientales","nupes":22.74,"mal":15.6,"score":0.412042,"couleur":"#ecd492","mal_inscrits_estimes":56680.728,"voix_nupes":38645,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Pyrénées-Orientales","x":22.74,"voix":38645,"etiquette":false},{"code":"67","nom":"Bas-Rhin","nupes":20.330000000000002,"mal":14.399999999999999,"score":0.239034,"couleur":"#d48567","mal_inscrits_estimes":112949.42399999998,"voix_nupes":72443,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Bas-Rhin","x":20.330000000000002,"voix":72443,"etiquette":false},{"code":"68","nom":"Haut-Rhin","nupes":16.17,"mal":12.4,"score":0.034991,"couleur":"#b72834","mal_inscrits_estimes":66147.552,"voix_nupes":37028,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Haut-Rhin","x":16.17,"voix":37028,"etiquette":false},{"code":"69","nom":"Rhône","nupes":28.27,"mal":21.099999999999998,"score":0.826556,"couleur":"#5fb66b","mal_inscrits_estimes":251611.80299999999,"voix_nupes":168215,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Rhône","x":28.27,"voix":168215,"etiquette":true},{"code":"70","nom":"Haute-Saône","nupes":19.81,"mal":14.2,"score":0.203279,"couleur":"#cf755e","mal_inscrits_estimes":25296.873999999996,"voix_nupes":17719,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Haute-Saône","x":19.81,"voix":17719,"etiquette":false},{"code":"71","nom":"Saône-et-Loire","nupes":25.22,"mal":13.8,"score":0.351364,"couleur":"#e3b883","mal_inscrits_estimes":55756.83,"voix_nupes":48616,"source_nupes":"Wikipédia - Élections législatives de 2022 en Saône-et-Loire","x":25.22,"voix":48616,"etiquette":false},{"code":"72","nom":"Sarthe","nupes":24.26,"mal":13.600000000000001,"score":0.295357,"couleur":"#dc9e75","mal_inscrits_estimes":56045.328,"voix_nupes":44410,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Sarthe","x":24.26,"voix":44410,"etiquette":false},{"code":"73","nom":"Savoie","nupes":25.080000000000002,"mal":16.900000000000002,"score":0.600649,"couleur":"#c5e293","mal_inscrits_estimes":54453.997,"voix_nupes":39909,"source_nupes":"Wikipédia - Élections législatives de 2022 en Savoie","x":25.080000000000002,"voix":39909,"etiquette":false},{"code":"74","nom":"Haute-Savoie","nupes":22.42,"mal":17.299999999999997,"score":0.464756,"couleur":"#f3eca0","mal_inscrits_estimes":98522.981,"voix_nupes":57388,"source_nupes":"Wikipédia - Élections législatives de 2022 en Haute-Savoie","x":22.42,"voix":57388,"etiquette":false},{"code":"76","nom":"Seine-Maritime","nupes":29.659999999999997,"mal":15.9,"score":0.667584,"couleur":"#a7d587","mal_inscrits_estimes":140350.57200000001,"voix_nupes":124935,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Seine-Maritime","x":29.659999999999997,"voix":124935,"etiquette":false},{"code":"77","nom":"Seine-et-Marne","nupes":28.53,"mal":17.299999999999997,"score":0.742407,"couleur":"#85c67a","mal_inscrits_estimes":156538.87699999998,"voix_nupes":111828,"source_nupes":"Wikipédia - Élections législatives de 2022 en Seine-et-Marne","x":28.53,"voix":111828,"etiquette":false},{"code":"78","nom":"Yvelines","nupes":24.490000000000002,"mal":15.1,"score":0.448102,"couleur":"#f1e49c","mal_inscrits_estimes":145746.861,"voix_nupes":120692,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Yvelines","x":24.490000000000002,"voix":120692,"etiquette":false},{"code":"79","nom":"Deux-Sèvres","nupes":29.509999999999998,"mal":12.6,"score":0.217113,"couleur":"#d17b62","mal_inscrits_estimes":34536.474,"voix_nupes":39231,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Deux-Sèvres","x":29.509999999999998,"voix":39231,"etiquette":false},{"code":"80","nom":"Somme","nupes":24.88,"mal":15.8,"score":0.529701,"couleur":"#e5ef9f","mal_inscrits_estimes":64950.324,"voix_nupes":49107,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Somme","x":24.88,"voix":49107,"etiquette":false},{"code":"81","nom":"Tarn","nupes":24.83,"mal":15.9,"score":0.533827,"couleur":"#e3ee9e","mal_inscrits_estimes":47565.168,"voix_nupes":39237,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Tarn","x":24.83,"voix":39237,"etiquette":false},{"code":"82","nom":"Tarn-et-Garonne","nupes":26.0,"mal":14.7,"score":0.470538,"couleur":"#f4eea1","mal_inscrits_estimes":27832.392,"voix_nupes":25035,"source_nupes":"Wikipédia - Élections législatives de 2022 en Tarn-et-Garonne","x":26.0,"voix":25035,"etiquette":false},{"code":"83","nom":"Var","nupes":16.17,"mal":16.2,"score":0.159071,"couleur":"#c86053","mal_inscrits_estimes":133617.438,"voix_nupes":60644,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Var","x":16.17,"voix":60644,"etiquette":false},{"code":"84","nom":"Vaucluse","nupes":21.95,"mal":15.0,"score":0.315404,"couleur":"#dea87a","mal_inscrits_estimes":61989.149999999994,"voix_nupes":41676,"source_nupes":"Wikipédia - Élections législatives de 2022 en Vaucluse","x":21.95,"voix":41676,"etiquette":false},{"code":"85","nom":"Vendée","nupes":20.169999999999998,"mal":12.3,"score":0.072136,"couleur":"#bc393d","mal_inscrits_estimes":67999.443,"voix_nupes":53464,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Vendée","x":20.169999999999998,"voix":53464,"etiquette":false},{"code":"86","nom":"Vienne","nupes":28.060000000000002,"mal":17.1,"score":0.712103,"couleur":"#93cc7f","mal_inscrits_estimes":52481.952000000005,"voix_nupes":42888,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Vienne","x":28.060000000000002,"voix":42888,"etiquette":false},{"code":"87","nom":"Haute-Vienne","nupes":34.06,"mal":15.299999999999999,"score":0.667814,"couleur":"#a7d487","mal_inscrits_estimes":40469.418,"voix_nupes":46135,"source_nupes":"Wikipédia - Élections législatives de 2022 dans la Haute-Vienne","x":34.06,"voix":46135,"etiquette":false},{"code":"88","nom":"Vosges","nupes":17.549999999999997,"mal":13.5,"score":0.119517,"couleur":"#c34e49","mal_inscrits_estimes":37603.98,"voix_nupes":23593,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Vosges","x":17.549999999999997,"voix":23593,"etiquette":false},{"code":"89","nom":"Yonne","nupes":21.51,"mal":15.1,"score":0.313945,"couleur":"#dea77a","mal_inscrits_estimes":36080.996999999996,"voix_nupes":25054,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Yonne","x":21.51,"voix":25054,"etiquette":false},{"code":"90","nom":"Territoire de Belfort","nupes":23.82,"mal":15.5,"score":0.441566,"couleur":"#f0e19a","mal_inscrits_estimes":14608.13,"voix_nupes":10771,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Territoire de Belfort","x":23.82,"voix":10771,"etiquette":false},{"code":"91","nom":"Essonne","nupes":32.519999999999996,"mal":16.900000000000002,"score":0.791561,"couleur":"#6fbc71","mal_inscrits_estimes":135973.513,"voix_nupes":122455,"source_nupes":"Wikipédia - Élections législatives de 2022 dans l'Essonne","x":32.519999999999996,"voix":122455,"etiquette":true},{"code":"92","nom":"Hauts-de-Seine","nupes":28.09,"mal":16.8,"score":0.691458,"couleur":"#9cd083","mal_inscrits_estimes":168698.712,"voix_nupes":147196,"source_nupes":"Wikipédia - Élections législatives de 2022 dans les Hauts-de-Seine","x":28.09,"voix":147196,"etiquette":false},{"code":"94","nom":"Val-de-Marne","nupes":36.9,"mal":17.299999999999997,"score":0.852623,"couleur":"#53b166","mal_inscrits_estimes":138864.15899999999,"voix_nupes":138274,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Val-de-Marne","x":36.9,"voix":138274,"etiquette":true},{"code":"95","nom":"Val-d'Oise","nupes":31.269999999999996,"mal":17.4,"score":0.831479,"couleur":"#5db56a","mal_inscrits_estimes":128401.734,"voix_nupes":97919,"source_nupes":"Wikipédia - Élections législatives de 2022 dans le Val-d'Oise","x":31.269999999999996,"voix":97919,"etiquette":true},{"code":"972","nom":"Martinique","nupes":37.5,"mal":21.8,"score":0.959543,"couleur":"#239c54","mal_inscrits_estimes":66394.298,"voix_nupes":23286,"source_nupes":"Wikipédia - Élections législatives de 2022 en Martinique","x":37.5,"voix":23286,"etiquette":true},{"code":"974","nom":"La Réunion","nupes":29.7,"mal":15.1,"score":0.588725,"couleur":"#cae495","mal_inscrits_estimes":102372.413,"voix_nupes":57373,"source_nupes":"Wikipédia - Élections législatives de 2022 à La Réunion","x":29.7,"voix":57373,"etiquette":false}];
+    const legendValues = [11264.02, 60085.859000000004, 293048.98];
+    const svg = document.getElementById("chart");
+    const tooltip = document.getElementById("tooltip");
+    const selection = document.getElementById("selection");
+    const ns = "http://www.w3.org/2000/svg";
+
+    function node(name, attrs = {}, text = "") {
+      const element = document.createElementNS(ns, name);
+      Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+      if (text) element.textContent = text;
+      return element;
+    }
+    function pct(value, digits = 1) {
+      return value.toLocaleString("fr-FR", {minimumFractionDigits:digits, maximumFractionDigits:digits}) + " %";
+    }
+    function integer(value) {
+      return value?.toLocaleString("fr-FR", {maximumFractionDigits:0}) ?? "n.d.";
+    }
+    function correlation(xs, ys) {
+      const mx = xs.reduce((a,b)=>a+b,0) / xs.length;
+      const my = ys.reduce((a,b)=>a+b,0) / ys.length;
+      const num = xs.reduce((sum, x, i) => sum + (x - mx) * (ys[i] - my), 0);
+      const den = Math.sqrt(xs.reduce((sum, x) => sum + (x - mx) ** 2, 0) * ys.reduce((sum, y) => sum + (y - my) ** 2, 0));
+      return num / den;
+    }
+    function regression(xs, ys) {
+      const mx = xs.reduce((a,b)=>a+b,0) / xs.length;
+      const my = ys.reduce((a,b)=>a+b,0) / ys.length;
+      const slope = xs.reduce((sum, x, i) => sum + (x - mx) * (ys[i] - my), 0) / xs.reduce((sum, x) => sum + (x - mx) ** 2, 0);
+      return {slope, intercept: my - slope * mx};
+    }
+    function median(values) {
+      const ordered = [...values].sort((a,b)=>a-b);
+      const mid = Math.floor(ordered.length / 2);
+      return ordered.length % 2 ? ordered[mid] : (ordered[mid - 1] + ordered[mid]) / 2;
+    }
+
+    function renderSizeLegend(radius) {
+      const wrap = document.getElementById("size-legend");
+      const chart = node("svg", {viewBox:"0 0 300 92", "aria-hidden":"true"});
+      const baseline = 62;
+      [legendValues[0], legendValues[1], legendValues[2]].forEach((value, index) => {
+        const r = radius(value);
+        const x = 34 + index * 112;
+        chart.append(node("circle", {cx:x, cy:baseline-r, r:r, fill:"#8fb9c9", "fill-opacity":".35", stroke:"#487083"}));
+        chart.append(node("text", {x:x, y:84, "text-anchor":"middle", class:"tick-label"}, integer(value)));
+      });
+      wrap.append(chart);
+    }
+
+    function render() {
+      svg.replaceChildren();
+      document.querySelector("#size-legend svg")?.remove();
+      const box = svg.getBoundingClientRect();
+      const width = Math.max(720, box.width);
+      const height = Math.max(480, box.height);
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+      const margin = {top:28, right:34, bottom:62, left:70};
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+      const xs = data.map(d => d.x);
+      const ys = data.map(d => d.mal);
+      const volumes = data.map(d => d.mal_inscrits_estimes).filter(Boolean);
+      const minX = Math.floor((Math.min(...xs) - 2) / 5) * 5;
+      const maxX = Math.ceil((Math.max(...xs) + 2) / 5) * 5;
+      const minY = Math.floor((Math.min(...ys) - 1) / 2) * 2;
+      const maxY = Math.ceil((Math.max(...ys) + 1) / 2) * 2;
+      const minVolume = Math.min(...volumes);
+      const maxVolume = Math.max(...volumes);
+      const x = value => margin.left + (value - minX) / (maxX - minX) * innerWidth;
+      const y = value => margin.top + innerHeight - (value - minY) / (maxY - minY) * innerHeight;
+      const radius = value => 4 + Math.sqrt((value - minVolume) / (maxVolume - minVolume)) * 18;
+      const stats = regression(xs, ys);
+      const medianX = median(xs);
+      const medianY = median(ys);
+
+      for (let value = Math.ceil(minX / 5) * 5; value <= maxX; value += 5) {
+        svg.append(node("line", {x1:x(value), y1:margin.top, x2:x(value), y2:margin.top+innerHeight, class:"grid"}));
+        svg.append(node("text", {x:x(value), y:margin.top+innerHeight+22, "text-anchor":"middle", class:"tick-label"}, pct(value, 0)));
+      }
+      for (let value = Math.ceil(minY / 2) * 2; value <= maxY; value += 2) {
+        svg.append(node("line", {x1:margin.left, y1:y(value), x2:margin.left+innerWidth, y2:y(value), class:"grid"}));
+        svg.append(node("text", {x:margin.left-11, y:y(value)+4, "text-anchor":"end", class:"tick-label"}, pct(value, 0)));
+      }
+      svg.append(node("line", {x1:margin.left, y1:margin.top+innerHeight, x2:margin.left+innerWidth, y2:margin.top+innerHeight, class:"axis"}));
+      svg.append(node("line", {x1:margin.left, y1:margin.top, x2:margin.left, y2:margin.top+innerHeight, class:"axis"}));
+      svg.append(node("text", {x:margin.left+innerWidth/2, y:height-16, "text-anchor":"middle", class:"axis-label"}, "NUPES parmi les suffrages exprimés"));
+      svg.append(node("text", {x:18, y:margin.top+innerHeight/2, transform:`rotate(-90 18 ${margin.top+innerHeight/2})`, "text-anchor":"middle", class:"axis-label"}, "Part de mal-inscrits"));
+
+      const medians = node("g", {id:"median-lines"});
+      medians.append(node("line", {x1:x(medianX), y1:margin.top, x2:x(medianX), y2:margin.top+innerHeight, class:"median"}));
+      medians.append(node("line", {x1:margin.left, y1:y(medianY), x2:margin.left+innerWidth, y2:y(medianY), class:"median"}));
+      svg.append(medians);
+      svg.append(node("line", {id:"regression-line", x1:x(minX), y1:y(stats.slope * minX + stats.intercept), x2:x(maxX), y2:y(stats.slope * maxX + stats.intercept), class:"regression"}));
+
+      data.forEach(d => {
+        const circle = node("circle", {cx:x(d.x), cy:y(d.mal), r:radius(d.mal_inscrits_estimes), fill:d.couleur, class:"point", tabindex:"0"});
+        const showTooltip = event => {
+          tooltip.style.display = "block";
+          tooltip.innerHTML = `<strong>${d.nom} (${d.code})</strong><br>NUPES : ${pct(d.x,2)}<br>Mal-inscrits : ${pct(d.mal)}<br>Mal-inscrits estimés : ${integer(d.mal_inscrits_estimes)}<br>Score croisé : ${d.score.toFixed(3).replace(".",",")}`;
+          tooltip.style.left = `${Math.min(event.clientX + 14, window.innerWidth - 230)}px`;
+          tooltip.style.top = `${Math.min(event.clientY + 14, window.innerHeight - 130)}px`;
+        };
+        circle.addEventListener("mousemove", showTooltip);
+        circle.addEventListener("mouseenter", showTooltip);
+        circle.addEventListener("mouseleave", () => tooltip.style.display = "none");
+        circle.addEventListener("click", () => {
+          svg.querySelectorAll(".point.selected").forEach(point => point.classList.remove("selected"));
+          circle.classList.add("selected");
+          selection.innerHTML = `<strong>${d.nom} (${d.code})</strong>
+            <div>NUPES : <b>${pct(d.x,2)}</b></div>
+            <div>Mal-inscrits : <b>${pct(d.mal)}</b></div>
+            <div>Score croisé : <b>${d.score.toFixed(3).replace(".",",")}</b></div>
+            <div>Mal-inscrits estimés : <b>${integer(d.mal_inscrits_estimes)}</b></div>
+            <div>Voix : <b>${integer(d.voix)}</b></div>`;
+        });
+        svg.append(circle);
+        const label = node("text", {x:x(d.x)+radius(d.mal_inscrits_estimes)+4, y:y(d.mal)-7, class:"point-label", "data-default":d.etiquette ? "1" : "0"}, d.code);
+        label.style.display = d.etiquette ? "" : "none";
+        svg.append(label);
+      });
+      renderSizeLegend(radius);
+      document.getElementById("labels").dispatchEvent(new Event("change"));
+      document.getElementById("regression").dispatchEvent(new Event("change"));
+      document.getElementById("medians").dispatchEvent(new Event("change"));
+    }
+
+    document.getElementById("labels").addEventListener("change", event => {
+      svg.querySelectorAll(".point-label").forEach(label => {
+        label.style.display = event.target.checked || label.dataset.default === "1" ? "" : "none";
+      });
+    });
+    document.getElementById("regression").addEventListener("change", event => {
+      const line = document.getElementById("regression-line");
+      if (line) line.style.display = event.target.checked ? "" : "none";
+    });
+    document.getElementById("medians").addEventListener("change", event => {
+      const lines = document.getElementById("median-lines");
+      if (lines) lines.style.display = event.target.checked ? "" : "none";
+    });
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(render, 120);
+    });
+    render();
+  </script>
+</body>
+</html>
