@@ -26,7 +26,7 @@ ASSETS = {
 
 
 @st.cache_data
-def read_text(path: Path) -> str:
+def read_text(path: Path, mtime_ns: int) -> str:
     return path.read_text(encoding="utf-8")
 
 
@@ -41,7 +41,7 @@ def assert_assets_exist() -> None:
 
 
 def html_view(path: Path, height: int = 900) -> None:
-    components.html(read_text(path), height=height, scrolling=True)
+    components.html(read_text(path, path.stat().st_mtime_ns), height=height, scrolling=True)
     st.download_button(
         "Télécharger le HTML",
         data=path.read_bytes(),
@@ -52,7 +52,7 @@ def html_view(path: Path, height: int = 900) -> None:
 
 
 def markdown_view(path: Path) -> None:
-    st.markdown(read_text(path))
+    st.markdown(read_text(path, path.stat().st_mtime_ns))
     st.download_button(
         "Télécharger le tableau Markdown",
         data=path.read_bytes(),
@@ -91,16 +91,16 @@ with scatter_tab:
     choice = st.segmented_control(
         "Scrutin",
         [
-            "NUPES législatives 2022 T2",
             "NUPES législatives 2022 T1",
+            "NUPES législatives 2022 T2",
             "Mélenchon présidentielle 2022 T1",
         ],
-        default="NUPES législatives 2022 T2",
+        default="NUPES législatives 2022 T1",
     )
-    if choice == "NUPES législatives 2022 T2":
-        html_view(ASSETS["scatter_nupes_t2"], height=920)
-    elif choice == "NUPES législatives 2022 T1":
+    if choice == "NUPES législatives 2022 T1":
         html_view(ASSETS["scatter_nupes_t1"], height=920)
+    elif choice == "NUPES législatives 2022 T2":
+        html_view(ASSETS["scatter_nupes_t2"], height=920)
     else:
         html_view(ASSETS["scatter_melenchon"], height=920)
 
@@ -113,16 +113,16 @@ with map_tab:
     choice = st.segmented_control(
         "Carte",
         [
-            "NUPES législatives 2022 T2",
             "NUPES législatives 2022 T1",
+            "NUPES législatives 2022 T2",
             "Mélenchon présidentielle 2022 T1",
         ],
-        default="NUPES législatives 2022 T2",
+        default="NUPES législatives 2022 T1",
     )
-    if choice == "NUPES législatives 2022 T2":
-        html_view(ASSETS["map_nupes_t2"], height=920)
-    elif choice == "NUPES législatives 2022 T1":
+    if choice == "NUPES législatives 2022 T1":
         html_view(ASSETS["map_nupes_t1"], height=920)
+    elif choice == "NUPES législatives 2022 T2":
+        html_view(ASSETS["map_nupes_t2"], height=920)
     else:
         html_view(ASSETS["map_melenchon"], height=920)
 
@@ -135,16 +135,16 @@ with table_tab:
     choice = st.segmented_control(
         "Tableau",
         [
-            "NUPES législatives 2022 T2",
             "NUPES législatives 2022 T1",
+            "NUPES législatives 2022 T2",
             "Mélenchon présidentielle 2022 T1",
         ],
-        default="NUPES législatives 2022 T2",
+        default="NUPES législatives 2022 T1",
     )
-    if choice == "NUPES législatives 2022 T2":
-        markdown_view(ASSETS["table_nupes_t2"])
-    elif choice == "NUPES législatives 2022 T1":
+    if choice == "NUPES législatives 2022 T1":
         markdown_view(ASSETS["table_nupes_t1"])
+    elif choice == "NUPES législatives 2022 T2":
+        markdown_view(ASSETS["table_nupes_t2"])
     else:
         markdown_view(ASSETS["table_melenchon"])
 

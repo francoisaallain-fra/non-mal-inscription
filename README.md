@@ -25,7 +25,7 @@ Elle embarque les rendus HTML publics suivants :
 Pour déployer sur Streamlit Community Cloud :
 
 ```text
-Repository: lfi-pee/non-mal-inscription
+Repository: francoisaallain-fra/non-mal-inscription
 Branch: master
 Main file path: streamlit_app.py
 ```

@@ -29,7 +29,7 @@ Le fichier contient déjà `streamlit>=1.41,<2`.
 1. Utiliser le dépôt GitHub :
 
 ```text
-lfi-pee/non-mal-inscription
+francoisaallain-fra/non-mal-inscription
 ```
 
 2. Vérifier que la branche `master` contient bien l'app Streamlit et les rendus HTML.
@@ -43,7 +43,7 @@ https://share.streamlit.io/
 4. Créer une nouvelle app avec :
 
 ```text
-Repository: lfi-pee/non-mal-inscription
+Repository: francoisaallain-fra/non-mal-inscription
 Branch: master
 Main file path: streamlit_app.py
 ```
