@@ -1,0 +1,6 @@
+annee,classe_age,presidentielle_t1_connue,legislatives_t1_connue,deperdition_age_t1_connue,incertitude_max_points_t1,presidentielle_t2_connue,legislatives_t2_connue,deperdition_age_t2_connue,incertitude_max_points_t2,deperdition_pres_leg_au_moins_un_tour,statut,source
+2017,18-24,70.6,26.6,44.0,4.1,67.6,22.5,45.1,4.1,,reconstitution publique avec fourchette,"Insee Premiere 1670, figures 2 et 3, https://www.insee.fr/fr/statistiques/3138704"
+2017,25-29,65.4,26.0,39.4,5.6,62.6,20.3,42.3,5.6,,reconstitution publique avec fourchette,"Insee Premiere 1670, figures 2 et 3, https://www.insee.fr/fr/statistiques/3138704"
+2017,30-34,73.9,34.0,39.9,4.5,70.6,27.4,43.2,4.5,,reconstitution publique avec fourchette,"Insee Premiere 1670, figures 2 et 3, https://www.insee.fr/fr/statistiques/3138704"
+2017,18-34 approx. non pondere,70.0,28.9,41.1,4.7,66.9,23.4,43.5,4.7,,"moyenne simple des tranches 18-24, 25-29, 30-34","Calcul sur Insee Premiere 1670, figures 2 et 3"
+2022,moins de 30 ans,,,,,,,,,39.0,publie en agrege presidentielle versus legislatives; T1/T2 a calculer par microdonnees,"Insee Premiere 1928, cite dans https://fr.wikipedia.org/wiki/Abstention_de_vote_en_France"
