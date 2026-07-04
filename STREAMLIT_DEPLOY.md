@@ -2,9 +2,9 @@
 
 Cette app publie les rendus publics suivants :
 
-- nuage NUPES 2022 sans outliers, avec bulles de mal-inscrits estimés ;
+- nuage NUPES 2022 T2 sans outliers, avec bulles de mal-inscrits estimés ;
 - nuage Mélenchon/LFI 2022 sans outliers, avec bulles de mal-inscrits estimés ;
-- carte territorialisée NUPES 2022 ;
+- carte territorialisée NUPES 2022 T2 ;
 - carte territorialisée Mélenchon/LFI 2022 ;
 - tableaux top 25 des départements.
 
@@ -58,8 +58,8 @@ requirements.txt
 .streamlit/config.toml
 maps/2022-nuage-points-mal-inscrits-nupes-departements-bulles-sans-outliers.html
 maps/2022-nuage-points-mal-inscrits-melenchon-departements-bulles-sans-outliers.html
-maps/2022-croisement-mal-inscrits-nupes-departements-coalition-web.html
+maps/2022-croisement-mal-inscrits-nupes-departements-t2.html
 maps/2022-croisement-mal-inscrits-melenchon-presidentielle-departements-web.html
-top-25-departements-mal-inscrits-nupes-2022.md
+top-25-departements-mal-inscrits-nupes-t2-2022.md
 top-25-departements-mal-inscrits-melenchon-2022.md
 ```

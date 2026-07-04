@@ -6,7 +6,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 INPUT_GEOJSON = (
-    ROOT / "data/04_analysis/cartographie/2022-departements-mal-inscription-nupes.geojson"
+    ROOT
+    / "data/04_analysis/cartographie/2022-departements-mal-inscription-nupes-t2.geojson"
 )
 OUTPUT_HTML = ROOT / "maps/2022-nuage-points-mal-inscrits-nupes-departements.html"
 
@@ -113,7 +114,7 @@ def build_html(rows):
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nuage de points mal-inscription x vote NUPES en 2022</title>
+  <title>Nuage de points mal-inscription x vote NUPES au second tour des législatives de 2022</title>
   <style>
     :root {{
       color-scheme: light;
@@ -290,7 +291,7 @@ def build_html(rows):
 </head>
 <body>
   <header>
-    <h1>Mal-inscription et vote NUPES au premier tour des législatives de 2022</h1>
+    <h1>Mal-inscription et vote NUPES au second tour des législatives de 2022</h1>
     <p>Un point par département · couleur : score croisé par moyenne géométrique des rangs percentiles</p>
   </header>
   <main>
@@ -327,8 +328,8 @@ def build_html(rows):
         permettent pas de conclure au comportement individuel des mal-inscrits.
       </p>
       <p class="note">
-        Sources : Insee Première n°1986, figure 4 ; résultats NUPES de coalition
-        contrôlés par département sur Wikipédia ; ministère de l'Intérieur.
+        Sources : Insee Première n°1986, figure 4 ; ministère de l'Intérieur
+        via Hexagonal, législatives 2022 T2.
       </p>
     </aside>
   </main>

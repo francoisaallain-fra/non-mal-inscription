@@ -72,11 +72,11 @@ def write_filtered(label, module, output_path, x_key):
     content = add_outlier_note(content, excluded, x_key)
     if label == "NUPES":
         content = content.replace(
-            "Nuage de points mal-inscription x vote NUPES en 2022",
-            "Nuage de points mal-inscription x vote NUPES en 2022 - sans outliers",
+            "Nuage de points mal-inscription x vote NUPES au second tour des législatives de 2022",
+            "Nuage de points mal-inscription x vote NUPES au second tour des législatives de 2022 - sans outliers",
         ).replace(
-            "Mal-inscription et vote NUPES au premier tour des législatives de 2022",
-            "Mal-inscription et vote NUPES au premier tour des législatives de 2022 - sans outliers",
+            "Mal-inscription et vote NUPES au second tour des législatives de 2022",
+            "Mal-inscription et vote NUPES au second tour des législatives de 2022 - sans outliers",
         )
     else:
         content = content.replace(
