@@ -13,6 +13,26 @@ mal-inscription et vote NUPES, puis de rendre cette relation visible grâce à u
 carte croisée allant du rouge, pour les territoires faibles sur les deux
 variables, au vert, pour les territoires élevés sur les deux variables.
 
+## App Streamlit
+
+Une version web partageable est fournie dans [`streamlit_app.py`](streamlit_app.py).
+Elle embarque les rendus HTML publics suivants :
+
+- nuages de points NUPES 2022 T2 et Mélenchon présidentielle 2022 T1, sans outliers ;
+- cartes territorialisées NUPES 2022 T2 et Mélenchon présidentielle 2022 T1 ;
+- tableaux top 25 des départements.
+
+Pour déployer sur Streamlit Community Cloud :
+
+```text
+Repository: lfi-pee/non-mal-inscription
+Branch: master
+Main file path: streamlit_app.py
+```
+
+Les dépendances sont listées dans [`requirements.txt`](requirements.txt), et
+la configuration visuelle Streamlit dans [`.streamlit/config.toml`](.streamlit/config.toml).
+
 Le projet est aussi devenu un travail sur la qualité des données électorales :
 les premières cartes ont révélé des résultats NUPES incomplets dans plusieurs
 territoires. Les versions successives documentent les erreurs observées, les

@@ -21,11 +21,21 @@ ASSETS = {
 
 
 @st.cache_data
-def read_text(path):
+def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def html_view(path, height=900):
+def assert_assets_exist() -> None:
+    missing = [str(path.relative_to(ROOT)) for path in ASSETS.values() if not path.exists()]
+    if not missing:
+        return
+
+    st.error("Fichiers de rendu introuvables dans le dépôt déployé.")
+    st.code("\n".join(missing), language="text")
+    st.stop()
+
+
+def html_view(path: Path, height: int = 900) -> None:
     components.html(read_text(path), height=height, scrolling=True)
     st.download_button(
         "Télécharger le HTML",
@@ -36,7 +46,7 @@ def html_view(path, height=900):
     )
 
 
-def markdown_view(path):
+def markdown_view(path: Path) -> None:
     st.markdown(read_text(path))
     st.download_button(
         "Télécharger le tableau Markdown",
@@ -53,6 +63,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+
+assert_assets_exist()
 
 st.title("Mal-inscription, NUPES et LFI en 2022")
 st.caption(

@@ -22,15 +22,15 @@ requirements.txt
 
 Le fichier contient déjà `streamlit>=1.41,<2`.
 
-## Déployer depuis ton GitHub
+## Déployer depuis GitHub
 
-1. Créer un repo GitHub sous ton compte personnel, par exemple :
+1. Utiliser le dépôt GitHub :
 
 ```text
-francoisaallain-fra/non-mal-inscription-streamlit
+lfi-pee/non-mal-inscription
 ```
 
-2. Pousser ce dossier dans ce repo personnel, pas dans `lfi-pee/non-mal-inscription`.
+2. Vérifier que la branche `master` contient bien l'app Streamlit et les rendus HTML.
 
 3. Aller sur Streamlit Community Cloud :
 
@@ -41,8 +41,8 @@ https://share.streamlit.io/
 4. Créer une nouvelle app avec :
 
 ```text
-Repository: francoisaallain-fra/non-mal-inscription-streamlit
-Branch: main
+Repository: lfi-pee/non-mal-inscription
+Branch: master
 Main file path: streamlit_app.py
 ```
 
