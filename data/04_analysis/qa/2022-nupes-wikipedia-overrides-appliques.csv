@@ -1,0 +1,191 @@
+tour,code_departement,libelle_departement,voix_avant,part_avant,voix_apres,part_apres,source
+T1,01,Ain,46671,0.225200,46671,0.225200,Wikipédia - Élections législatives de 2022 dans l'Ain
+T1,02,Aisne,40464,0.240800,40464,0.240800,Wikipédia - Élections législatives de 2022 dans l'Aisne
+T1,03,Allier,30034,0.242300,30034,0.242300,Wikipédia - Élections législatives de 2022 dans l'Allier
+T1,04,Alpes-de-Haute-Provence,18684,0.286700,18684,0.286700,Wikipédia - Élections législatives de 2022 dans les Alpes-de-Haute-Provence
+T1,05,Hautes-Alpes,16927,0.287300,16927,0.287300,Wikipédia - Élections législatives de 2022 dans les Hautes-Alpes
+T1,06,Alpes-Maritimes,58127,0.167200,58127,0.167200,Wikipédia - Élections législatives de 2022 dans les Alpes-Maritimes
+T1,07,Ardèche,38881,0.289300,38881,0.289300,Wikipédia - Élections législatives de 2022 dans l'Ardèche
+T1,08,Ardennes,14752,0.175200,14752,0.175200,Wikipédia - Élections législatives de 2022 dans les Ardennes
+T1,09,Ariège,19771,0.310500,19771,0.310500,Wikipédia - Élections législatives de 2022 dans l'Ariège
+T1,10,Aube,17153,0.174600,17153,0.174600,Wikipédia - Élections législatives de 2022 dans l'Aube
+T1,11,Aude,35371,0.250900,35371,0.250900,Wikipédia - Élections législatives de 2022 dans l'Aude
+T1,12,Aveyron,29951,0.253700,29951,0.253700,Wikipédia - Élections législatives de 2022 dans l'Aveyron
+T1,13,Bouches-du-Rhône,161290,0.262400,161290,0.262400,Wikipédia - Élections législatives de 2022 dans les Bouches-du-Rhône
+T1,14,Calvados,70729,0.273600,70729,0.273600,Wikipédia - Élections législatives de 2022 dans le Calvados
+T1,15,Cantal,10638,0.175100,10638,0.175100,Wikipédia - Élections législatives de 2022 dans le Cantal
+T1,16,Charente,28247,0.223900,28247,0.223900,Wikipédia - Élections législatives de 2022 en Charente
+T1,17,Charente-Maritime,57489,0.224100,57489,0.224100,Wikipédia - Élections législatives de 2022 en Charente-Maritime
+T1,18,Cher,27571,0.257200,27571,0.257200,Wikipédia - Élections législatives de 2022 dans le Cher
+T1,19,Corrèze,23510,0.233600,23510,0.233600,Wikipédia - Élections législatives de 2022 en Corrèze
+T1,21,Côte-d'Or,43029,0.233100,43029,0.233100,Wikipédia - Élections législatives de 2022 dans la Côte-d'Or
+T1,22,Côtes-d'Armor,66434,0.259200,66434,0.259200,Wikipédia - Élections législatives de 2022 dans les Côtes-d'Armor
+T1,23,Creuse,12545,0.263700,12545,0.263700,Wikipédia - Élections législatives de 2022 dans la Creuse
+T1,24,Dordogne,40783,0.238900,40783,0.238900,Wikipédia - Élections législatives de 2022 en Dordogne
+T1,25,Doubs,43643,0.243700,43643,0.243700,Wikipédia - Élections législatives de 2022 dans le Doubs
+T1,26,Drôme,57637,0.301700,57637,0.301700,Wikipédia - Élections législatives de 2022 dans la Drôme
+T1,27,Eure,44941,0.216700,44941,0.216700,Wikipédia - Élections législatives de 2022 dans l'Eure
+T1,28,Eure-et-Loir,27447,0.193000,27447,0.193000,Wikipédia - Élections législatives de 2022 en Eure-et-Loir
+T1,29,Finistère,113236,0.307200,113236,0.307200,Wikipédia - Élections législatives de 2022 dans le Finistère
+T1,2A,Corse-du-Sud,4667,0.094700,4667,0.094700,Wikipédia - Élections législatives de 2022 en Corse-du-Sud
+T1,2B,Haute-Corse,4828,0.085400,4828,0.085400,Wikipédia - Élections législatives de 2022 en Haute-Corse
+T1,30,Gard,65610,0.255200,65610,0.255200,Wikipédia - Élections législatives de 2022 dans le Gard
+T1,31,Haute-Garonne,166344,0.338500,166344,0.338500,Wikipédia - Élections législatives de 2022 dans la Haute-Garonne
+T1,32,Gers,17343,0.214600,17343,0.214600,Wikipédia - Élections législatives de 2022 dans le Gers
+T1,33,Gironde,173442,0.299900,173442,0.299900,Wikipédia - Élections législatives de 2022 en Gironde
+T1,34,Hérault,105721,0.263300,105721,0.263300,Wikipédia - Élections législatives de 2022 dans l'Hérault
+T1,35,Ille-et-Vilaine,132936,0.331300,132936,0.331300,Wikipédia - Élections législatives de 2022 en Ille-et-Vilaine
+T1,36,Indre,18128,0.222500,18128,0.222500,Wikipédia - Élections législatives de 2022 dans l'Indre
+T1,37,Indre-et-Loire,59858,0.271400,59858,0.271400,Wikipédia - Élections législatives de 2022 en Indre-et-Loire
+T1,38,Isère,132151,0.305400,132151,0.305400,Wikipédia - Élections législatives de 2022 dans l'Isère
+T1,39,Jura,24983,0.259800,24983,0.259800,Wikipédia - Élections législatives de 2022 dans le Jura
+T1,40,Landes,53877,0.310500,53877,0.310500,Wikipédia - Élections législatives de 2022 dans les Landes
+T1,41,Loir-et-Cher,24720,0.202100,24720,0.202100,Wikipédia - Élections législatives de 2022 en Loir-et-Cher
+T1,42,Loire,55358,0.227600,55358,0.227600,Wikipédia - Élections législatives de 2022 dans la Loire
+T1,43,Haute-Loire,18099,0.193200,18099,0.193200,Wikipédia - Élections législatives de 2022 dans la Haute-Loire
+T1,44,Loire-Atlantique,182738,0.343700,182738,0.343700,Wikipédia - Élections législatives de 2022 dans la Loire-Atlantique
+T1,45,Loiret,50863,0.229700,50863,0.229700,Wikipédia - Élections législatives de 2022 dans le Loiret
+T1,46,Lot,18590,0.229600,18590,0.229600,Wikipédia - Élections législatives de 2022 dans le Lot
+T1,47,Lot-et-Garonne,31066,0.251200,31066,0.251200,Wikipédia - Élections législatives de 2022 en Lot-et-Garonne
+T1,48,Lozère,8637,0.254100,8637,0.254100,Wikipédia - Élections législatives de 2022 en Lozère
+T1,49,Maine-et-Loire,75940,0.269500,75940,0.269500,Wikipédia - Élections législatives de 2022 en Maine-et-Loire
+T1,50,Manche,43582,0.231600,43582,0.231600,Wikipédia - Élections législatives de 2022 dans la Manche
+T1,51,Marne,31885,0.186700,31885,0.186700,Wikipédia - Élections législatives de 2022 dans la Marne
+T1,52,Haute-Marne,9060,0.145400,9060,0.145400,Wikipédia - Élections législatives de 2022 dans la Haute-Marne
+T1,53,Mayenne,33009,0.310800,33009,0.310800,Wikipédia - Élections législatives de 2022 dans la Mayenne
+T1,54,Meurthe-et-Moselle,68436,0.309200,68436,0.309200,Wikipédia - Élections législatives de 2022 en Meurthe-et-Moselle
+T1,55,Meuse,10590,0.169500,10590,0.169500,Wikipédia - Élections législatives de 2022 dans la Meuse
+T1,56,Morbihan,76683,0.243500,76683,0.243500,Wikipédia - Élections législatives de 2022 dans le Morbihan
+T1,57,Moselle,62106,0.205800,62106,0.205800,Wikipédia - Élections législatives de 2022 en Moselle
+T1,58,Nièvre,18867,0.249800,18867,0.249800,Wikipédia - Élections législatives de 2022 dans la Nièvre
+T1,59,Nord,209937,0.264500,209937,0.264500,Wikipédia - Élections législatives de 2022 dans le Nord
+T1,60,Oise,52633,0.202300,52633,0.202300,Wikipédia - Élections législatives de 2022 dans l'Oise
+T1,61,Orne,19856,0.197600,19856,0.197600,Wikipédia - Élections législatives de 2022 dans l'Orne
+T1,62,Pas-de-Calais,99458,0.200700,99458,0.200700,Wikipédia - Élections législatives de 2022 dans le Pas-de-Calais
+T1,63,Puy-de-Dôme,88834,0.375200,88834,0.375200,Wikipédia - Élections législatives de 2022 dans le Puy-de-Dôme
+T1,64,Pyrénées-Atlantiques,64589,0.240600,64589,0.240600,Wikipédia - Élections législatives de 2022 dans les Pyrénées-Atlantiques
+T1,65,Hautes-Pyrénées,22044,0.238300,22044,0.238300,Wikipédia - Élections législatives de 2022 dans les Hautes-Pyrénées
+T1,66,Pyrénées-Orientales,38645,0.227400,38645,0.227400,Wikipédia - Élections législatives de 2022 dans les Pyrénées-Orientales
+T1,67,Bas-Rhin,72443,0.203300,72443,0.203300,Wikipédia - Élections législatives de 2022 dans le Bas-Rhin
+T1,68,Haut-Rhin,37028,0.161700,37028,0.161700,Wikipédia - Élections législatives de 2022 dans le Haut-Rhin
+T1,69,Rhône,168215,0.282700,168215,0.282700,Wikipédia - Élections législatives de 2022 dans le Rhône
+T1,70,Haute-Saône,17719,0.198100,17719,0.198100,Wikipédia - Élections législatives de 2022 dans la Haute-Saône
+T1,71,Saône-et-Loire,48616,0.252200,48616,0.252200,Wikipédia - Élections législatives de 2022 en Saône-et-Loire
+T1,72,Sarthe,44410,0.242600,44410,0.242600,Wikipédia - Élections législatives de 2022 dans la Sarthe
+T1,73,Savoie,39909,0.250800,39909,0.250800,Wikipédia - Élections législatives de 2022 en Savoie
+T1,74,Haute-Savoie,57388,0.224200,57388,0.224200,Wikipédia - Élections législatives de 2022 en Haute-Savoie
+T1,75,Paris,280578,0.376900,280578,0.376900,Wikipédia - Élections législatives de 2022 à Paris
+T1,76,Seine-Maritime,124935,0.296600,124935,0.296600,Wikipédia - Élections législatives de 2022 dans la Seine-Maritime
+T1,77,Seine-et-Marne,111828,0.285300,111828,0.285300,Wikipédia - Élections législatives de 2022 en Seine-et-Marne
+T1,78,Yvelines,120692,0.244900,120692,0.244900,Wikipédia - Élections législatives de 2022 dans les Yvelines
+T1,79,Deux-Sèvres,39231,0.295100,39231,0.295100,Wikipédia - Élections législatives de 2022 dans les Deux-Sèvres
+T1,80,Somme,49107,0.248800,49107,0.248800,Wikipédia - Élections législatives de 2022 dans la Somme
+T1,81,Tarn,39237,0.248300,39237,0.248300,Wikipédia - Élections législatives de 2022 dans le Tarn
+T1,82,Tarn-et-Garonne,25035,0.260000,25035,0.260000,Wikipédia - Élections législatives de 2022 en Tarn-et-Garonne
+T1,83,Var,60644,0.161700,60644,0.161700,Wikipédia - Élections législatives de 2022 dans le Var
+T1,84,Vaucluse,41676,0.219500,41676,0.219500,Wikipédia - Élections législatives de 2022 en Vaucluse
+T1,85,Vendée,53464,0.201700,53464,0.201700,Wikipédia - Élections législatives de 2022 dans la Vendée
+T1,86,Vienne,42888,0.280600,42888,0.280600,Wikipédia - Élections législatives de 2022 dans la Vienne
+T1,87,Haute-Vienne,46135,0.340600,46135,0.340600,Wikipédia - Élections législatives de 2022 dans la Haute-Vienne
+T1,88,Vosges,23593,0.175500,23593,0.175500,Wikipédia - Élections législatives de 2022 dans les Vosges
+T1,89,Yonne,25054,0.215100,25054,0.215100,Wikipédia - Élections législatives de 2022 dans l'Yonne
+T1,90,Territoire de Belfort,10771,0.238200,10771,0.238200,Wikipédia - Élections législatives de 2022 dans le Territoire de Belfort
+T1,91,Essonne,122455,0.325200,122455,0.325200,Wikipédia - Élections législatives de 2022 dans l'Essonne
+T1,92,Hauts-de-Seine,147196,0.280900,147196,0.280900,Wikipédia - Élections législatives de 2022 dans les Hauts-de-Seine
+T1,93,Seine-Saint-Denis,139909,0.459800,139909,0.459800,Wikipédia - Élections législatives de 2022 dans la Seine-Saint-Denis
+T1,94,Val-de-Marne,138274,0.369000,138274,0.369000,Wikipédia - Élections législatives de 2022 dans le Val-de-Marne
+T1,95,Val-d'Oise,97919,0.312700,97919,0.312700,Wikipédia - Élections législatives de 2022 dans le Val-d'Oise
+T1,971,Guadeloupe,25089,0.334000,25089,0.334000,Wikipédia - Élections législatives de 2022 en Guadeloupe
+T1,972,Martinique,23286,0.375000,23286,0.375000,Wikipédia - Élections législatives de 2022 en Martinique
+T1,973,Guyane,6040,0.225300,6040,0.225300,Wikipédia - Élections législatives de 2022 en Guyane
+T1,974,La Réunion,57373,0.297000,57373,0.297000,Wikipédia - Élections législatives de 2022 à La Réunion
+T2,01,Ain,71536,0.398332,71537,0.398300,Wikipédia - Élections législatives de 2022 dans l'Ain
+T2,02,Aisne,28015,0.182539,28015,0.182500,Wikipédia - Élections législatives de 2022 dans l'Aisne
+T2,03,Allier,37808,0.366844,37808,0.366800,Wikipédia - Élections législatives de 2022 dans l'Allier
+T2,04,Alpes-de-Haute-Provence,30163,0.501980,30165,0.502000,Wikipédia - Élections législatives de 2022 dans les Alpes-de-Haute-Provence
+T2,05,Hautes-Alpes,25118,0.465640,25121,0.465700,Wikipédia - Élections législatives de 2022 dans les Hautes-Alpes
+T2,06,Alpes-Maritimes,14111,0.046286,14111,0.046300,Wikipédia - Élections législatives de 2022 dans les Alpes-Maritimes
+T2,07,Ardèche,58202,0.472722,58199,0.472700,Wikipédia - Élections législatives de 2022 dans l'Ardèche
+T2,09,Ariège,27129,0.490836,27129,0.490800,Wikipédia - Élections législatives de 2022 dans l'Ariège
+T2,11,Aude,40627,0.320632,40628,0.320600,Wikipédia - Élections législatives de 2022 dans l'Aude
+T2,12,Aveyron,46699,0.443287,46708,0.443300,Wikipédia - Élections législatives de 2022 dans l'Aveyron
+T2,13,Bouches-du-Rhône,162728,0.288348,162728,0.288300,Wikipédia - Élections législatives de 2022 dans les Bouches-du-Rhône
+T2,14,Calvados,96207,0.403090,96210,0.403100,Wikipédia - Élections législatives de 2022 dans le Calvados
+T2,16,Charente,18830,0.165694,18830,0.165700,Wikipédia - Élections législatives de 2022 en Charente
+T2,17,Charente-Maritime,41828,0.178208,41828,0.178200,Wikipédia - Élections législatives de 2022 en Charente-Maritime
+T2,18,Cher,27273,0.291055,27273,0.291100,Wikipédia - Élections législatives de 2022 dans le Cher
+T2,19,Corrèze,40606,0.439878,40606,0.439900,Wikipédia - Élections législatives de 2022 en Corrèze
+T2,21,Côte-d'Or,43604,0.268474,43603,0.268500,Wikipédia - Élections législatives de 2022 dans la Côte-d'Or
+T2,22,Côtes-d'Armor,109776,0.454226,109760,0.454200,Wikipédia - Élections législatives de 2022 dans les Côtes-d'Armor
+T2,23,Creuse,21752,0.514426,21752,0.514400,Wikipédia - Élections législatives de 2022 dans la Creuse
+T2,24,Dordogne,55934,0.359337,55934,0.359300,Wikipédia - Élections législatives de 2022 en Dordogne
+T2,25,Doubs,33792,0.217677,33792,0.217700,Wikipédia - Élections législatives de 2022 dans le Doubs
+T2,26,Drôme,80393,0.462236,80395,0.462200,Wikipédia - Élections législatives de 2022 dans la Drôme
+T2,27,Eure,19824,0.104797,19825,0.104800,Wikipédia - Élections législatives de 2022 dans l'Eure
+T2,28,Eure-et-Loir,16251,0.128242,16251,0.128200,Wikipédia - Élections législatives de 2022 en Eure-et-Loir
+T2,29,Finistère,163966,0.468651,163966,0.468700,Wikipédia - Élections législatives de 2022 dans le Finistère
+T2,30,Gard,57127,0.245696,57264,0.230900,Wikipédia - Élections législatives de 2022 dans le Gard
+T2,31,Haute-Garonne,233664,0.523997,233637,0.523900,Wikipédia - Élections législatives de 2022 dans la Haute-Garonne
+T2,32,Gers,17025,0.239445,17025,0.239400,Wikipédia - Élections législatives de 2022 dans le Gers
+T2,33,Gironde,195435,0.374366,195435,0.374400,Wikipédia - Élections législatives de 2022 en Gironde
+T2,34,Hérault,167062,0.463232,167062,0.463200,Wikipédia - Élections législatives de 2022 dans l'Hérault
+T2,35,Ille-et-Vilaine,163632,0.429046,163631,0.429000,Wikipédia - Élections législatives de 2022 en Ille-et-Vilaine
+T2,36,Indre,14258,0.200546,14258,0.200500,Wikipédia - Élections législatives de 2022 dans l'Indre
+T2,37,Indre-et-Loire,76298,0.384470,76294,0.384500,Wikipédia - Élections législatives de 2022 en Indre-et-Loire
+T2,38,Isère,122744,0.314238,122744,0.314200,Wikipédia - Élections législatives de 2022 dans l'Isère
+T2,39,Jura,36277,0.412769,36278,0.412800,Wikipédia - Élections législatives de 2022 dans le Jura
+T2,40,Landes,78513,0.505459,78513,0.505500,Wikipédia - Élections législatives de 2022 dans les Landes
+T2,41,Loir-et-Cher,15606,0.142352,15606,0.142300,Wikipédia - Élections législatives de 2022 en Loir-et-Cher
+T2,42,Loire,54012,0.258575,54012,0.258600,Wikipédia - Élections législatives de 2022 dans la Loire
+T2,43,Haute-Loire,25635,0.306148,25635,0.306100,Wikipédia - Élections législatives de 2022 dans la Haute-Loire
+T2,44,Loire-Atlantique,250197,0.498300,250219,0.498300,Wikipédia - Élections législatives de 2022 dans la Loire-Atlantique
+T2,45,Loiret,56470,0.283961,56470,0.284000,Wikipédia - Élections législatives de 2022 dans le Loiret
+T2,46,Lot,26634,0.346080,26634,0.346100,Wikipédia - Élections législatives de 2022 dans le Lot
+T2,47,Lot-et-Garonne,27041,0.236623,27041,0.236600,Wikipédia - Élections législatives de 2022 en Lot-et-Garonne
+T2,48,Lozère,14620,0.457232,14620,0.457200,Wikipédia - Élections législatives de 2022 en Lozère
+T2,49,Maine-et-Loire,110028,0.420653,110029,0.420700,Wikipédia - Élections législatives de 2022 en Maine-et-Loire
+T2,50,Manche,70166,0.406420,70166,0.406400,Wikipédia - Élections législatives de 2022 dans la Manche
+T2,51,Marne,24614,0.160889,24616,0.160900,Wikipédia - Élections législatives de 2022 dans la Marne
+T2,53,Mayenne,34161,0.519859,34161,0.519900,Wikipédia - Élections législatives de 2022 dans la Mayenne
+T2,54,Meurthe-et-Moselle,62559,0.310869,84342,0.419100,Wikipédia - Élections législatives de 2022 en Meurthe-et-Moselle
+T2,56,Morbihan,103225,0.357407,103225,0.357400,Wikipédia - Élections législatives de 2022 dans le Morbihan
+T2,57,Moselle,57120,0.211195,57120,0.211200,Wikipédia - Élections législatives de 2022 en Moselle
+T2,58,Nièvre,11527,0.157930,11527,0.157900,Wikipédia - Élections législatives de 2022 dans la Nièvre
+T2,59,Nord,235259,0.321895,235259,0.321900,Wikipédia - Élections législatives de 2022 dans le Nord
+T2,60,Oise,26827,0.114014,26827,0.114000,Wikipédia - Élections législatives de 2022 dans l'Oise
+T2,61,Orne,14776,0.163727,14776,0.163700,Wikipédia - Élections législatives de 2022 dans l'Orne
+T2,62,Pas-de-Calais,46723,0.101461,46723,0.101500,Wikipédia - Élections législatives de 2022 dans le Pas-de-Calais
+T2,63,Puy-de-Dôme,118690,0.565840,118691,0.565800,Wikipédia - Élections législatives de 2022 dans le Puy-de-Dôme
+T2,64,Pyrénées-Atlantiques,106370,0.436915,106371,0.436900,Wikipédia - Élections législatives de 2022 dans les Pyrénées-Atlantiques
+T2,65,Hautes-Pyrénées,39894,0.489383,39896,0.489400,Wikipédia - Élections législatives de 2022 dans les Hautes-Pyrénées
+T2,66,Pyrénées-Orientales,16368,0.107737,16368,0.107700,Wikipédia - Élections législatives de 2022 dans les Pyrénées-Orientales
+T2,67,Bas-Rhin,59983,0.184898,59996,0.184900,Wikipédia - Élections législatives de 2022 dans le Bas-Rhin
+T2,68,Haut-Rhin,10094,0.050602,10094,0.050600,Wikipédia - Élections législatives de 2022 dans le Haut-Rhin
+T2,69,Rhône,195656,0.369948,195315,0.369700,Wikipédia - Élections législatives de 2022 dans le Rhône
+T2,71,Saône-et-Loire,60627,0.358377,60627,0.358000,Wikipédia - Élections législatives de 2022 en Saône-et-Loire
+T2,72,Sarthe,49503,0.299619,49503,0.299600,Wikipédia - Élections législatives de 2022 dans la Sarthe
+T2,73,Savoie,58222,0.406082,58222,0.406100,Wikipédia - Élections législatives de 2022 en Savoie
+T2,74,Haute-Savoie,75890,0.326166,75867,0.326100,Wikipédia - Élections législatives de 2022 en Haute-Savoie
+T2,75,Paris,248048,0.417709,248048,0.417700,Wikipédia - Élections législatives de 2022 à Paris
+T2,76,Seine-Maritime,152047,0.401651,152053,0.401700,Wikipédia - Élections législatives de 2022 dans la Seine-Maritime
+T2,77,Seine-et-Marne,141275,0.395961,141275,0.396000,Wikipédia - Élections législatives de 2022 en Seine-et-Marne
+T2,78,Yvelines,157852,0.354757,157805,0.354600,Wikipédia - Élections législatives de 2022 dans les Yvelines
+T2,79,Deux-Sèvres,60607,0.496803,60605,0.496800,Wikipédia - Élections législatives de 2022 dans les Deux-Sèvres
+T2,80,Somme,49209,0.274789,49209,0.274800,Wikipédia - Élections législatives de 2022 dans la Somme
+T2,81,Tarn,61511,0.427614,61511,0.427600,Wikipédia - Élections législatives de 2022 dans le Tarn
+T2,82,Tarn-et-Garonne,25327,0.292764,25327,0.292800,Wikipédia - Élections législatives de 2022 en Tarn-et-Garonne
+T2,84,Vaucluse,14065,0.080891,14065,0.080900,Wikipédia - Élections législatives de 2022 en Vaucluse
+T2,85,Vendée,41707,0.179162,41709,0.179200,Wikipédia - Élections législatives de 2022 dans la Vendée
+T2,86,Vienne,38243,0.273590,38243,0.273600,Wikipédia - Élections législatives de 2022 dans la Vienne
+T2,87,Haute-Vienne,66991,0.559242,66991,0.559200,Wikipédia - Élections législatives de 2022 dans la Haute-Vienne
+T2,89,Yonne,16135,0.155129,16135,0.155100,Wikipédia - Élections législatives de 2022 dans l'Yonne
+T2,90,Territoire de Belfort,9476,0.249473,9476,0.249500,Wikipédia - Élections législatives de 2022 dans le Territoire de Belfort
+T2,91,Essonne,173725,0.493999,173725,0.494000,Wikipédia - Élections législatives de 2022 dans l'Essonne
+T2,92,Hauts-de-Seine,184068,0.370701,184068,0.370700,Wikipédia - Élections législatives de 2022 dans les Hauts-de-Seine
+T2,93,Seine-Saint-Denis,160361,0.654476,160361,0.654500,Wikipédia - Élections législatives de 2022 dans la Seine-Saint-Denis
+T2,94,Val-de-Marne,179817,0.502828,179817,0.502800,Wikipédia - Élections législatives de 2022 dans le Val-de-Marne
+T2,95,Val-d'Oise,151052,0.511276,151052,0.511300,Wikipédia - Élections législatives de 2022 dans le Val-d'Oise
+T2,971,Guadeloupe,15484,0.188993,26117,0.318800,Wikipédia - Élections législatives de 2022 en Guadeloupe
+T2,972,Martinique,0,0.000000,39429,0.540800,Wikipédia - Élections législatives de 2022 en Martinique
+T2,973,Guyane,8277,0.264610,8277,0.264600,Wikipédia - Élections législatives de 2022 en Guyane
+T2,974,La Réunion,109404,0.513699,109404,0.513700,Wikipédia - Élections législatives de 2022 à La Réunion

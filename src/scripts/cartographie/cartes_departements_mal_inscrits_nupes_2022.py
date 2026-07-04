@@ -4,7 +4,10 @@ import json
 import math
 from pathlib import Path
 
-from openpyxl import load_workbook
+try:
+    from openpyxl import load_workbook
+except ImportError:
+    load_workbook = None
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -190,6 +193,12 @@ def load_wikipedia_overrides():
 
 
 def extract_mal_inscription():
+    if load_workbook is None:
+        raise RuntimeError(
+            "openpyxl est requis pour extraire le fichier Insee brut. "
+            "Les scripts qui réutilisent seulement les GeoJSON déjà produits "
+            "peuvent importer ce module sans openpyxl."
+        )
     wb = load_workbook(INSEE_XLSX, data_only=True)
     ws = wb["Figure 4"]
 
@@ -1050,6 +1059,8 @@ def map_html(geojson, mode, title, subtitle, variable_label, source_note):
 
     function method(value) {{
       if (value === "total_coalition_wikipedia") return "Total Wikipédia de coalition";
+      if (value === "total_coalition_wikipedia_t1") return "Total Wikipédia de coalition - premier tour";
+      if (value === "total_coalition_wikipedia_t2") return "Total Wikipédia de coalition - second tour";
       if (value === "total_coalition_officiel") return "Total de coalition territorial";
       if (value === "total_coalition_officiel_corse") return "Total de coalition Corse";
       if (value === "calcul_candidats") return "Calcul candidat par candidat";

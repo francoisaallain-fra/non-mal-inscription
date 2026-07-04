@@ -87,7 +87,7 @@ nationalité française âgées de 18 ans ou plus.
 | Insee RP2022, dossiers complets départementaux | Populations par âge et populations scolarisées utilisées dans le tableau Top 25 | [insee.fr/fr/statistiques/2011101](https://www.insee.fr/fr/statistiques/2011101) |
 | Résultats du ministère de l'Intérieur, distribués dans Hexagonal | Résultats des législatives 2022 par bureau de vote, premier et second tours | [github.com/lafranceinsoumise/hexagonal](https://github.com/lafranceinsoumise/hexagonal) |
 | Table de codage Legis-2022 distribuée dans Hexagonal | Identification complémentaire des candidats rattachés à la NUPES | [github.com/lafranceinsoumise/hexagonal](https://github.com/lafranceinsoumise/hexagonal) |
-| Pages Wikipédia départementales des législatives de 2022 | Totaux de coalition NUPES au premier tour, utilisés pour corriger les sous-comptes | [Résultats par département](https://fr.wikipedia.org/wiki/R%C3%A9sultats_par_d%C3%A9partement_des_%C3%A9lections_l%C3%A9gislatives_fran%C3%A7aises_de_2022) |
+| Pages Wikipédia départementales des législatives de 2022 | Totaux de coalition NUPES aux premier et second tours, utilisés pour corriger les sous-comptes | [Résultats par département](https://fr.wikipedia.org/wiki/R%C3%A9sultats_par_d%C3%A9partement_des_%C3%A9lections_l%C3%A9gislatives_fran%C3%A7aises_de_2022) |
 
 Les résultats du ministère constituent la source électorale officielle. Les
 pages Wikipédia ont été utilisées comme source de **totaux de coalition** et
@@ -141,8 +141,7 @@ part_nupes_inscrits = voix_nupes / inscrits
 La carte principale utilise `part_nupes_exprimes`, qui mesure la préférence
 électorale exprimée sans intégrer directement l'abstention.
 
-Cette méthode est conservée pour produire une comparaison T1/T2 à sources
-constantes :
+Cette méthode reste conservée comme contrôle à sources constantes :
 
 - premier tour : ministère de l'Intérieur + Legis-2022 ;
 - second tour : ministère de l'Intérieur + Legis-2022.
@@ -160,7 +159,8 @@ métropolitains.
 ### Méthode « coalition contrôlée »
 
 La méthode utilise ensemble le nombre de voix et le pourcentage de coalition
-affichés sur la page Wikipédia départementale lorsqu'ils ont pu être extraits.
+affichés sur la page Wikipédia départementale lorsqu'ils ont pu être extraits,
+au premier comme au second tour.
 Elle ne calcule plus un taux hybride avec un numérateur Wikipédia et un
 dénominateur ministère.
 
@@ -550,13 +550,18 @@ configurations de duel ou de triangulaire. Un département sans candidat NUPES
 au second tour peut donc apparaître à zéro sans que cela traduise une absence
 d'électorat NUPES.
 
-Deux cartes à sources identiques ont été produites pour permettre une
-comparaison prudente :
+Deux agrégats ministère + Legis-2022 à sources identiques sont conservés comme
+contrôle :
 
 ```text
 T1 ministère + Legis-2022 : 5 977 283 voix NUPES, 26,28 % des exprimés
 T2 ministère + Legis-2022 : 6 797 881 voix NUPES, 32,76 % des exprimés
 ```
+
+Les rendus principaux utilisent désormais les totaux de coalition Wikipédia
+quand ils sont disponibles : 100 départements au premier tour et 90 au second
+tour dans le dernier CSV d'overrides. Les départements sans total Wikipédia T2
+conservent le calcul ministère + Legis-2022.
 
 Le total de voix de coalition contrôlée peut être additionné, mais aucun taux
 national n'est calculé en mélangeant les dénominateurs ministère et les
@@ -581,7 +586,7 @@ Le script :
 
 1. extrait la figure 4 du fichier Insee ;
 2. agrège les résultats NUPES des premier et second tours ;
-3. applique les valeurs de coalition contrôlées au premier tour ;
+3. applique les valeurs de coalition contrôlées aux premier et second tours ;
 4. joint les résultats au fond départemental ;
 5. calcule les scores et couleurs ;
 6. génère les GeoJSON et les cartes HTML interactives.
@@ -627,11 +632,19 @@ Le script :
 3. interroge l'API MediaWiki par lots ;
 4. extrait l'entrée officielle NUPES de l'infobox ;
 5. accepte les variantes de champ `votesN` et `vote électoralN` ;
-6. exclut les entrées explicitement dissidentes lorsque l'entrée officielle
+6. extrait aussi les champs de second tour `votes2vN` et `pourcentage2vN`
+   lorsqu'ils existent ;
+7. exclut les entrées explicitement dissidentes lorsque l'entrée officielle
    est identifiée par son logo ou sa couleur ;
-7. écrit les voix, le pourcentage, l'URL permanente, l'identifiant et
+8. écrit les voix, le pourcentage, l'URL permanente, l'identifiant et
    l'horodatage de la révision ;
-8. génère un CSV de contrôle pour les pages non extraites.
+9. génère un CSV de contrôle pour les pages non extraites.
+
+L'application des overrides sur les agrégats déjà produits est faite par :
+
+```text
+src/scripts/cartographie/appliquer_overrides_nupes_wikipedia_2022.py
+```
 
 ## Limites et pistes de prolongement
 

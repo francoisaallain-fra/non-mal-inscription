@@ -324,7 +324,7 @@ def main():
         "voix_nupes",
         "NUPES",
         OUTPUT_NUPES,
-        "Sources : Insee Première n°1986, figure 4 ; ministère de l'Intérieur via Hexagonal, législatives 2022 T2. Volume : part Insee de mal-inscrits × inscrits législatives 2022 T2.",
+        "Sources : Insee Première n°1986, figure 4 ; Wikipédia, pages départementales des législatives 2022, avec agrégats du ministère de l'Intérieur via Hexagonal conservés comme contrôle. Volume : part Insee de mal-inscrits × inscrits législatives 2022 T2.",
     )
     write_chart(
         "Mélenchon",

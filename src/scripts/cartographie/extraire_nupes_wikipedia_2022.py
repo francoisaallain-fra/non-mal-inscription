@@ -24,7 +24,7 @@ USER_AGENT = "non-mal-inscription/1.0 (recherche reproductible; contact via GitH
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Extrait les totaux NUPES T1 des pages Wikipédia départementales."
+        description="Extrait les totaux NUPES T1 et T2 des pages Wikipédia départementales."
     )
     parser.add_argument("--output", type=Path, default=OUTPUT_CSV)
     parser.add_argument("--missing-output", type=Path, default=QA_MISSING)
@@ -209,17 +209,35 @@ def extract_nupes(content):
         raise ValueError("plusieurs entrées NUPES possibles dans l'infobox")
 
     index = candidate_indexes.pop()
-    votes_keys = [f"votes{index}", f"vote électoral{index}"]
-    percentage_keys = [f"pourcentage{index}"]
-    votes_value = next((params[key] for key in votes_keys if key in params), None)
-    percentage_value = next(
-        (params[key] for key in percentage_keys if key in params), None
+    votes_t1_keys = [f"votes{index}", f"vote électoral{index}"]
+    percentage_t1_keys = [f"pourcentage{index}"]
+    votes_t2_keys = [f"votes2v{index}", f"votes 2v{index}", f"vote électoral2{index}"]
+    percentage_t2_keys = [f"pourcentage2v{index}", f"pourcentage 2v{index}"]
+
+    votes_t1_value = next((params[key] for key in votes_t1_keys if key in params), None)
+    percentage_t1_value = next(
+        (params[key] for key in percentage_t1_keys if key in params), None
     )
-    if votes_value is None or percentage_value is None:
+    votes_t2_value = next((params[key] for key in votes_t2_keys if key in params), None)
+    percentage_t2_value = next(
+        (params[key] for key in percentage_t2_keys if key in params), None
+    )
+
+    if votes_t1_value is None or percentage_t1_value is None:
         raise ValueError(
             f"voix ou pourcentage absent pour l'entrée NUPES n°{index}"
         )
-    return clean_number(votes_value), clean_number(percentage_value, decimal=True)
+
+    return {
+        "voix_t1": clean_number(votes_t1_value),
+        "pourcentage_t1": clean_number(percentage_t1_value, decimal=True),
+        "voix_t2": clean_number(votes_t2_value) if votes_t2_value else None,
+        "pourcentage_t2": (
+            clean_number(percentage_t2_value, decimal=True)
+            if percentage_t2_value
+            else None
+        ),
+    }
 
 
 def article_url(title, revid):
@@ -267,12 +285,20 @@ def main():
             revision = revisions.get(title)
             if not revision:
                 raise ValueError("page ou révision absente de la réponse groupée")
-            votes, percentage = extract_nupes(revision["content"])
+            nupes = extract_nupes(revision["content"])
             rows.append(
                 {
                     "code_departement": code,
-                    "voix_nupes_wikipedia_t1": votes,
-                    "pourcentage_nupes_wikipedia_t1": f"{percentage:.2f}",
+                    "voix_nupes_wikipedia_t1": nupes["voix_t1"],
+                    "pourcentage_nupes_wikipedia_t1": f"{nupes['pourcentage_t1']:.2f}",
+                    "voix_nupes_wikipedia_t2": (
+                        nupes["voix_t2"] if nupes["voix_t2"] is not None else ""
+                    ),
+                    "pourcentage_nupes_wikipedia_t2": (
+                        f"{nupes['pourcentage_t2']:.2f}"
+                        if nupes["pourcentage_t2"] is not None
+                        else ""
+                    ),
                     "source": f"Wikipédia - {revision['title']}",
                     "methode": "total_coalition_wikipedia",
                     "url_revision": article_url(
@@ -297,6 +323,8 @@ def main():
             "code_departement",
             "voix_nupes_wikipedia_t1",
             "pourcentage_nupes_wikipedia_t1",
+            "voix_nupes_wikipedia_t2",
+            "pourcentage_nupes_wikipedia_t2",
             "source",
             "methode",
             "url_revision",

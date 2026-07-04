@@ -328,8 +328,9 @@ def build_html(rows):
         permettent pas de conclure au comportement individuel des mal-inscrits.
       </p>
       <p class="note">
-        Sources : Insee Première n°1986, figure 4 ; ministère de l'Intérieur
-        via Hexagonal, législatives 2022 T2.
+        Sources : Insee Première n°1986, figure 4 ; Wikipédia, pages
+        départementales des législatives 2022, avec agrégats du ministère de
+        l'Intérieur via Hexagonal conservés comme contrôle.
       </p>
     </aside>
   </main>
