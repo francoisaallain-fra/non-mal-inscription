@@ -559,9 +559,10 @@ T2 ministère + Legis-2022 : 6 797 881 voix NUPES, 32,76 % des exprimés
 ```
 
 Les rendus principaux utilisent désormais les totaux de coalition Wikipédia
-quand ils sont disponibles : 100 départements au premier tour et 90 au second
-tour dans le dernier CSV d'overrides. Les départements sans total Wikipédia T2
-conservent le calcul ministère + Legis-2022.
+pour les 100 départements au premier comme au second tour. Quand l'entrée NUPES
+existe dans Wikipédia mais ne possède aucun total de second tour, le T2 est
+codé explicitement à zéro afin de ne pas retomber sur une définition
+ministère/Legis-2022 différente.
 
 Le total de voix de coalition contrôlée peut être additionné, mais aucun taux
 national n'est calculé en mélangeant les dénominateurs ministère et les

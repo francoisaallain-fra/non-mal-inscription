@@ -222,21 +222,35 @@ def extract_nupes(content):
     percentage_t2_value = next(
         (params[key] for key in percentage_t2_keys if key in params), None
     )
+    if votes_t2_value is not None and not str(votes_t2_value).strip():
+        votes_t2_value = None
+    if percentage_t2_value is not None and not str(percentage_t2_value).strip():
+        percentage_t2_value = None
 
     if votes_t1_value is None or percentage_t1_value is None:
         raise ValueError(
             f"voix ou pourcentage absent pour l'entrée NUPES n°{index}"
         )
 
-    return {
-        "voix_t1": clean_number(votes_t1_value),
-        "pourcentage_t1": clean_number(percentage_t1_value, decimal=True),
-        "voix_t2": clean_number(votes_t2_value) if votes_t2_value else None,
-        "pourcentage_t2": (
+    # Quand l'infobox identifie une entrée NUPES mais ne renseigne aucun champ
+    # de second tour, on code explicitement 0 : cela signifie que cette entrée
+    # de coalition n'a pas de total au T2 dans la page Wikipédia.
+    if votes_t2_value is None and percentage_t2_value is None:
+        votes_t2 = 0
+        percentage_t2 = 0.0
+    else:
+        votes_t2 = clean_number(votes_t2_value) if votes_t2_value else None
+        percentage_t2 = (
             clean_number(percentage_t2_value, decimal=True)
             if percentage_t2_value
             else None
-        ),
+        )
+
+    return {
+        "voix_t1": clean_number(votes_t1_value),
+        "pourcentage_t1": clean_number(percentage_t1_value, decimal=True),
+        "voix_t2": votes_t2,
+        "pourcentage_t2": percentage_t2,
     }
 
 
