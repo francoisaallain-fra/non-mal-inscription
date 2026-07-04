@@ -7,15 +7,20 @@ import streamlit.components.v1 as components
 ROOT = Path(__file__).resolve().parent
 
 ASSETS = {
-    "scatter_nupes": ROOT
+    "scatter_nupes_t2": ROOT
     / "maps/2022-nuage-points-mal-inscrits-nupes-departements-bulles-sans-outliers.html",
+    "scatter_nupes_t1": ROOT
+    / "maps/2022-nuage-points-mal-inscrits-nupes-t1-departements-bulles-sans-outliers.html",
     "scatter_melenchon": ROOT
     / "maps/2022-nuage-points-mal-inscrits-melenchon-departements-bulles-sans-outliers.html",
-    "map_nupes": ROOT
+    "map_nupes_t2": ROOT
     / "maps/2022-croisement-mal-inscrits-nupes-departements-t2.html",
+    "map_nupes_t1": ROOT
+    / "maps/2022-croisement-mal-inscrits-nupes-departements-t1.html",
     "map_melenchon": ROOT
     / "maps/2022-croisement-mal-inscrits-melenchon-presidentielle-departements-web.html",
-    "table_nupes": ROOT / "top-25-departements-mal-inscrits-nupes-t2-2022.md",
+    "table_nupes_t2": ROOT / "top-25-departements-mal-inscrits-nupes-t2-2022.md",
+    "table_nupes_t1": ROOT / "top-25-departements-mal-inscrits-nupes-t1-2022.md",
     "table_melenchon": ROOT / "top-25-departements-mal-inscrits-melenchon-2022.md",
 }
 
@@ -69,7 +74,7 @@ assert_assets_exist()
 st.title("Mal-inscription, NUPES et LFI en 2022")
 st.caption(
     "Croisements départementaux entre la mal-inscription Insee 2022, "
-    "le vote NUPES au second tour des législatives 2022 et le vote Mélenchon au premier tour de la présidentielle 2022."
+    "le vote NUPES aux législatives 2022 et le vote Mélenchon au premier tour de la présidentielle 2022."
 )
 
 scatter_tab, map_tab, table_tab, method_tab = st.tabs(
@@ -85,11 +90,17 @@ with scatter_tab:
     )
     choice = st.segmented_control(
         "Scrutin",
-        ["NUPES législatives 2022 T2", "Mélenchon présidentielle 2022 T1"],
+        [
+            "NUPES législatives 2022 T2",
+            "NUPES législatives 2022 T1",
+            "Mélenchon présidentielle 2022 T1",
+        ],
         default="NUPES législatives 2022 T2",
     )
     if choice == "NUPES législatives 2022 T2":
-        html_view(ASSETS["scatter_nupes"], height=920)
+        html_view(ASSETS["scatter_nupes_t2"], height=920)
+    elif choice == "NUPES législatives 2022 T1":
+        html_view(ASSETS["scatter_nupes_t1"], height=920)
     else:
         html_view(ASSETS["scatter_melenchon"], height=920)
 
@@ -101,11 +112,17 @@ with map_tab:
     )
     choice = st.segmented_control(
         "Carte",
-        ["NUPES législatives 2022 T2", "Mélenchon présidentielle 2022 T1"],
+        [
+            "NUPES législatives 2022 T2",
+            "NUPES législatives 2022 T1",
+            "Mélenchon présidentielle 2022 T1",
+        ],
         default="NUPES législatives 2022 T2",
     )
     if choice == "NUPES législatives 2022 T2":
-        html_view(ASSETS["map_nupes"], height=920)
+        html_view(ASSETS["map_nupes_t2"], height=920)
+    elif choice == "NUPES législatives 2022 T1":
+        html_view(ASSETS["map_nupes_t1"], height=920)
     else:
         html_view(ASSETS["map_melenchon"], height=920)
 
@@ -117,11 +134,17 @@ with table_tab:
     )
     choice = st.segmented_control(
         "Tableau",
-        ["NUPES législatives 2022 T2", "Mélenchon présidentielle 2022 T1"],
+        [
+            "NUPES législatives 2022 T2",
+            "NUPES législatives 2022 T1",
+            "Mélenchon présidentielle 2022 T1",
+        ],
         default="NUPES législatives 2022 T2",
     )
     if choice == "NUPES législatives 2022 T2":
-        markdown_view(ASSETS["table_nupes"])
+        markdown_view(ASSETS["table_nupes_t2"])
+    elif choice == "NUPES législatives 2022 T1":
+        markdown_view(ASSETS["table_nupes_t1"])
     else:
         markdown_view(ASSETS["table_melenchon"])
 

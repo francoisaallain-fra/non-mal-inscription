@@ -18,8 +18,8 @@ variables, au vert, pour les territoires élevés sur les deux variables.
 Une version web partageable est fournie dans [`streamlit_app.py`](streamlit_app.py).
 Elle embarque les rendus HTML publics suivants :
 
-- nuages de points NUPES 2022 T2 et Mélenchon présidentielle 2022 T1, sans outliers ;
-- cartes territorialisées NUPES 2022 T2 et Mélenchon présidentielle 2022 T1 ;
+- nuages de points NUPES 2022 T1/T2 et Mélenchon présidentielle 2022 T1, sans outliers ;
+- cartes territorialisées NUPES 2022 T1/T2 et Mélenchon présidentielle 2022 T1 ;
 - tableaux top 25 des départements.
 
 Pour déployer sur Streamlit Community Cloud :
