@@ -351,10 +351,13 @@ plus utile.
 section("Conclusion : une carte pour l’action")
 st.markdown(
     """
-Le hackathon a permis de fournir une première base de travail utile autour du
-croisement entre mal-inscription électorale et vote NUPES en 2022. La carte
-obtenue constitue un outil exploratoire intéressant pour visualiser des
-territoires où les deux phénomènes pourraient se recouper.
+En conclusion, le premier hackathon a permis de fournir une première base de
+travail utile autour du croisement entre mal-inscription électorale, le score
+NUPES aux législatives de 2022 et le score LFI à l’élection présidentielle de la
+même année. La carte obtenue constitue un outil exploratoire intéressant,
+permettant de visualiser des territoires où les deux phénomènes pourraient se
+recouper. Elle pourrait être éventuellement mobiliser pour des campagnes
+spécifiques (caravanes, etc.).
 
 Elle permet aussi de poser les bases d’une réflexion stratégique sur les publics
 et les espaces à cibler en priorité, notamment au regard de la forte proportion
