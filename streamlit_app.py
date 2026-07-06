@@ -403,32 +403,6 @@ travaux des autres axes du pôle analyse électorale, notamment sur l’abstenti
 """
 )
 
-section("Remarques stratégiques")
-st.markdown(
-    """
-Sur la question de la mal-inscription, notamment chez les jeunes et les
-étudiant·es, il faudrait réfléchir à la stratégie électorale. Les étudiant·es
-peuvent être confronté·es à une période de battement entre avril et juin, entre
-la fin de leur année universitaire et le début de l’été.
-
-Autant en avril, la probabilité qu’une part importante des étudiant·es soit dans
-sa résidence principale universitaire est forte ; autant à partir de la mi-mai
-et encore plus au mois de juin, une partie d’entre elles et eux n’est plus là :
-vacances, job saisonnier, retour chez les parents.
-
-Il faut donc éviter une doctrine trop descendante du type : inscrivez-vous dans
-votre résidence principale. L’enjeu serait plutôt de demander aux personnes ce
-qui correspond le mieux à leur situation : rester inscrites chez leurs parents,
-ce qui offre une forme de stabilité, ou s’inscrire dans leur ville d’études, ce
-qui peut être plus pratique lorsqu’elles y résident effectivement.
-
-Cette question de temporalité et de sociogéographie recoupe des stratégies
-politiques à arbitrer : présidentielle d’avril-mai, législatives de juin,
-éventuelle dissolution, mobilité estivale, vote jeune urbain ou redistribution
-du vote jeune vers des zones moins universitaires.
-"""
-)
-
 section("Bibliographie")
 st.markdown(
     """
