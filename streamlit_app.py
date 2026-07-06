@@ -93,7 +93,7 @@ def callout(text: str) -> None:
 
 
 st.set_page_config(
-    page_title="Résumé mal-inscription x vote NUPES 2022",
+    page_title="Mal-inscription, jeunesse mobile et vote NUPES/LFI",
     page_icon=None,
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -149,7 +149,7 @@ div[data-testid="stMetricValue"] {
     unsafe_allow_html=True,
 )
 
-st.title("Résumé mal-inscription x vote NUPES 2022")
+st.title("Mal-inscription, jeunesse mobile et vote NUPES/LFI : identifier les territoires d’action")
 st.markdown(
     """
 <p class="intro">
